@@ -1,0 +1,92 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  test:
+    name: Build & Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: ./node_modules/.bin/turbo build
+
+      - name: Run tests
+        run: ./node_modules/.bin/vitest run
+
+  integration:
+    name: Integration (fixture servers)
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install and build
+        run: npm ci && ./node_modules/.bin/turbo build
+
+      - name: Scan echo-server (tool tests must pass)
+        run: |
+          node packages/cli/dist/index.js scan \
+            "node fixtures/echo-server/dist/index.js" \
+            --output json > /tmp/echo-results.json || true
+          node -e "
+            const r = JSON.parse(require('fs').readFileSync('/tmp/echo-results.json','utf8'));
+            const toolFails = r.results.filter(t => t.testName.includes('valid input') && !t.passed);
+            if (toolFails.length > 0) {
+              console.error('Echo server tool tests had unexpected failures:', JSON.stringify(toolFails.map(t => t.testName)));
+              process.exit(1);
+            }
+            console.log('Echo server scan OK — tool tests passed:', r.passed, '/', r.total);
+          "
+
+      - name: Scan malicious-server (must exit non-zero with critical finding)
+        run: |
+          if node packages/cli/dist/index.js scan \
+            "node fixtures/malicious-server/dist/index.js" \
+            --output json > /tmp/malicious-results.json 2>/dev/null; then
+            echo "Malicious server scan exited 0 — expected critical security findings. Scanner may be broken."
+            exit 1
+          fi
+          echo "Malicious server scan correctly exited non-zero (critical finding detected)"
+
+      - name: Scan buggy-server with --fuzz (must produce valid JSON output)
+        run: |
+          node packages/cli/dist/index.js scan \
+            "node fixtures/buggy-server/dist/index.js" \
+            --fuzz --output json > /tmp/buggy-results.json 2>/dev/null || true
+          node -e "
+            const r = JSON.parse(require('fs').readFileSync('/tmp/buggy-results.json','utf8'));
+            if (typeof r.total !== 'number') {
+              console.error('Buggy server scan did not produce valid RunSummary JSON');
+              process.exit(1);
+            }
+            console.log('Buggy server scan completed. Total:', r.total, 'tests');
+          "
+
+      - name: Upload integration results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: integration-results
+          path: /tmp/*-results.json
+          if-no-files-found: ignore

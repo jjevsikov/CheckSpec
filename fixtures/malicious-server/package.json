@@ -1,0 +1,22 @@
+{
+  "name": "@checkspec-fixtures/malicious-server",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Simulated malicious MCP server fixture for CheckSpec security tests",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

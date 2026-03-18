@@ -1,0 +1,373 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jjevsikov/CheckSpec/main/packages/core/checkspec.schema.json",
+  "version": "1.0",
+  "name": "SQLite Server — Demo Collection",
+  "description": "Tests a real SQLite MCP server (sql.js / WebAssembly) that exposes a known security vulnerability: the `query` tool executes arbitrary SQL and echoes the query string verbatim in error messages, creating a prompt-injection passthrough surface. CheckSpec's security scanner detects this as a HIGH finding. All other tools demonstrate the secure pattern: parameterized queries and generic error messages.",
+  "server": {
+    "command": "node",
+    "args": [
+      "demos/sqlite-server/dist/index.js"
+    ]
+  },
+  "tests": [
+    {
+      "id": "protocol-init",
+      "name": "Initialization handshake",
+      "type": "protocol",
+      "tags": [
+        "protocol"
+      ]
+    },
+    {
+      "id": "list-tables",
+      "name": "list_tables › returns users, products, orders — validates schema",
+      "type": "tool-call",
+      "tool": "list_tables",
+      "input": {},
+      "expect": {
+        "success": true,
+        "contains": "users",
+        "schema": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "type": "object",
+            "required": [
+              "table",
+              "rowCount",
+              "columns"
+            ],
+            "properties": {
+              "table": {
+                "type": "string"
+              },
+              "rowCount": {
+                "type": "number"
+              },
+              "columns": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "name",
+                    "type",
+                    "primaryKey",
+                    "nullable"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "tags": [
+        "tool",
+        "read"
+      ]
+    },
+    {
+      "id": "query-select-all-users",
+      "name": "query › SELECT * FROM users — validates row shape",
+      "type": "tool-call",
+      "tool": "query",
+      "input": {
+        "sql": "SELECT * FROM users"
+      },
+      "expect": {
+        "success": true,
+        "contains": "Alice",
+        "schema": {
+          "type": "array",
+          "minItems": 4,
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "name",
+              "email",
+              "role"
+            ]
+          }
+        }
+      },
+      "tags": [
+        "tool",
+        "query"
+      ]
+    },
+    {
+      "id": "query-select-in-stock",
+      "name": "query › SELECT in-stock products (WHERE in_stock = 1)",
+      "type": "tool-call",
+      "tool": "query",
+      "input": {
+        "sql": "SELECT name, price FROM products WHERE in_stock = 1 ORDER BY price"
+      },
+      "expect": {
+        "success": true,
+        "contains": "Widget"
+      },
+      "tags": [
+        "tool",
+        "query"
+      ]
+    },
+    {
+      "id": "query-select-admin",
+      "name": "query › SELECT admin users (WHERE role = 'admin')",
+      "type": "tool-call",
+      "tool": "query",
+      "input": {
+        "sql": "SELECT id, name, email FROM users WHERE role = 'admin'"
+      },
+      "expect": {
+        "success": true,
+        "contains": "Alice"
+      },
+      "tags": [
+        "tool",
+        "query"
+      ]
+    },
+    {
+      "id": "query-order-by",
+      "name": "query › SELECT products ORDER BY price DESC",
+      "type": "tool-call",
+      "tool": "query",
+      "input": {
+        "sql": "SELECT name, price, category FROM products ORDER BY price DESC"
+      },
+      "expect": {
+        "success": true,
+        "contains": "Gadget"
+      },
+      "tags": [
+        "tool",
+        "query"
+      ]
+    },
+    {
+      "id": "query-aggregate",
+      "name": "query › GROUP BY category with COUNT and AVG",
+      "type": "tool-call",
+      "tool": "query",
+      "input": {
+        "sql": "SELECT category, COUNT(*) AS total, ROUND(AVG(price), 2) AS avg_price FROM products GROUP BY category ORDER BY category"
+      },
+      "expect": {
+        "success": true,
+        "contains": "hardware"
+      },
+      "tags": [
+        "tool",
+        "query"
+      ]
+    },
+    {
+      "id": "query-join",
+      "name": "query › JOIN orders ← users ← products — validates joined row shape",
+      "type": "tool-call",
+      "tool": "query",
+      "input": {
+        "sql": "SELECT u.name AS customer, p.name AS product, o.quantity, o.ordered_at FROM orders o JOIN users u ON u.id = o.user_id JOIN products p ON p.id = o.product_id ORDER BY o.id"
+      },
+      "expect": {
+        "success": true,
+        "contains": "Alice",
+        "schema": {
+          "type": "array",
+          "minItems": 4,
+          "items": {
+            "type": "object",
+            "required": [
+              "customer",
+              "product",
+              "quantity",
+              "ordered_at"
+            ]
+          }
+        }
+      },
+      "tags": [
+        "tool",
+        "query"
+      ]
+    },
+    {
+      "id": "query-subquery",
+      "name": "query › subquery — users who placed at least one order",
+      "type": "tool-call",
+      "tool": "query",
+      "input": {
+        "sql": "SELECT name FROM users WHERE id IN (SELECT DISTINCT user_id FROM orders) ORDER BY name"
+      },
+      "expect": {
+        "success": true,
+        "contains": "Alice"
+      },
+      "tags": [
+        "tool",
+        "query"
+      ]
+    },
+    {
+      "id": "query-invalid-sql",
+      "name": "query › invalid SQL — expect isError response",
+      "type": "tool-call",
+      "tool": "query",
+      "input": {
+        "sql": "SELECT FROM WHERE GIBBERISH"
+      },
+      "expect": {
+        "success": false
+      },
+      "tags": [
+        "tool",
+        "query",
+        "error-handling"
+      ]
+    },
+    {
+      "id": "create-table-notes",
+      "name": "create_table › creates a notes table",
+      "type": "tool-call",
+      "tool": "create_table",
+      "input": {
+        "name": "notes",
+        "columns": [
+          {
+            "name": "id",
+            "type": "INTEGER",
+            "primaryKey": true,
+            "nullable": false
+          },
+          {
+            "name": "title",
+            "type": "TEXT",
+            "primaryKey": false,
+            "nullable": false
+          },
+          {
+            "name": "content",
+            "type": "TEXT",
+            "primaryKey": false,
+            "nullable": true
+          }
+        ]
+      },
+      "expect": {
+        "success": true,
+        "contains": "created"
+      },
+      "tags": [
+        "tool",
+        "ddl"
+      ]
+    },
+    {
+      "id": "insert-row-note",
+      "name": "insert_row › inserts a note (parameterized) — validates response shape",
+      "type": "tool-call",
+      "tool": "insert_row",
+      "input": {
+        "table": "notes",
+        "data": {
+          "id": 1,
+          "title": "First note",
+          "content": "Hello from CheckSpec"
+        }
+      },
+      "expect": {
+        "success": true,
+        "contains": "inserted",
+        "schema": {
+          "type": "object",
+          "required": [
+            "inserted",
+            "rowsModified"
+          ],
+          "properties": {
+            "inserted": {
+              "type": "boolean"
+            },
+            "rowsModified": {
+              "type": "number"
+            }
+          }
+        }
+      },
+      "tags": [
+        "tool",
+        "write"
+      ]
+    },
+    {
+      "id": "update-row-note",
+      "name": "update_rows › updates note title (parameterized SET)",
+      "type": "tool-call",
+      "tool": "update_rows",
+      "input": {
+        "table": "notes",
+        "set": {
+          "title": "Updated note"
+        },
+        "where": "id = 1"
+      },
+      "expect": {
+        "success": true,
+        "contains": "updated"
+      },
+      "tags": [
+        "tool",
+        "write"
+      ]
+    },
+    {
+      "id": "delete-row-note",
+      "name": "delete_rows › deletes note",
+      "type": "tool-call",
+      "tool": "delete_rows",
+      "input": {
+        "table": "notes",
+        "where": "id = 1"
+      },
+      "expect": {
+        "success": true,
+        "contains": "deleted"
+      },
+      "tags": [
+        "tool",
+        "write"
+      ]
+    },
+    {
+      "id": "resource-schema",
+      "name": "db://schema › returns full schema with DDL and column info",
+      "type": "resource-read",
+      "uri": "db://schema",
+      "tags": [
+        "resource"
+      ]
+    },
+    {
+      "id": "security-query",
+      "name": "query › security scan — HIGH finding expected (injection echo)",
+      "type": "security",
+      "tool": "query",
+      "securityThreshold": "high",
+      "tags": [
+        "security"
+      ]
+    },
+    {
+      "id": "security-list-tables",
+      "name": "list_tables › security scan — no user input echoed (should pass)",
+      "type": "security",
+      "tool": "list_tables",
+      "securityThreshold": "medium",
+      "tags": [
+        "security"
+      ]
+    }
+  ]
+}

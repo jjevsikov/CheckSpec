@@ -1,0 +1,89 @@
+{
+  "name": "@checkspec/core",
+  "version": "0.2.0",
+  "type": "module",
+  "description": "Core library for MCP server testing — recording client, test runner, schema-based fuzzing, and security scanning",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "testing",
+    "security",
+    "llm",
+    "ai"
+  ],
+  "homepage": "https://github.com/jjevsikov/CheckSpec",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jjevsikov/CheckSpec.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jjevsikov/CheckSpec/issues"
+  },
+  "author": "jjevsikov",
+  "license": "MIT",
+  "files": [
+    "dist",
+    "!dist/**/*.test.*",
+    "!dist/.tsbuildinfo",
+    "checkspec.schema.json",
+    "README.md",
+    "LICENSE"
+  ],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./client": {
+      "import": "./dist/client/index.js",
+      "types": "./dist/client/index.d.ts"
+    },
+    "./runner": {
+      "import": "./dist/runner/index.js",
+      "types": "./dist/runner/index.d.ts"
+    },
+    "./security": {
+      "import": "./dist/security/index.js",
+      "types": "./dist/security/index.d.ts"
+    },
+    "./generators": {
+      "import": "./dist/generators/index.js",
+      "types": "./dist/generators/index.d.ts"
+    },
+    "./reporters": {
+      "import": "./dist/reporters/index.js",
+      "types": "./dist/reporters/index.d.ts"
+    },
+    "./schema": {
+      "import": "./dist/schema/collectionSchema.js",
+      "types": "./dist/schema/collectionSchema.d.ts"
+    },
+    "./checkspec.schema.json": "./checkspec.schema.json"
+  },
+  "scripts": {
+    "build": "tsc && node scripts/generate-json-schema.mjs",
+    "build:schema": "node scripts/generate-json-schema.mjs",
+    "build:watch": "tsc --watch",
+    "lint": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "ajv": "^8.17.0",
+    "chalk": "^5.3.0",
+    "json-schema-faker": "^0.5.6",
+    "zod": "^3.25.76",
+    "zod-validation-error": "^3.5.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0",
+    "zod-to-json-schema": "^3.25.1"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

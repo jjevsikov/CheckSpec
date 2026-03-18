@@ -1,0 +1,80 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jjevsikov/CheckSpec/main/packages/core/checkspec.schema.json",
+  "version": "1.0",
+  "name": "Shell Hooks — Teardown Demo",
+  "description": "Demonstrates that shell-type hooks work correctly. A shell afterAll hook runs 'echo teardown complete' to prove shell commands execute during teardown.",
+  "server": {
+    "command": "node",
+    "args": [
+      "demos/stateful-server/dist/index.js"
+    ]
+  },
+  "hooks": {
+    "beforeAll": [
+      {
+        "name": "seed fixture user charlie",
+        "run": {
+          "type": "tool-call",
+          "tool": "create_user",
+          "input": {
+            "id": "charlie",
+            "name": "Charlie",
+            "email": "charlie@example.com"
+          }
+        }
+      }
+    ],
+    "afterAll": [
+      {
+        "name": "shell teardown echo",
+        "run": {
+          "type": "shell",
+          "command": "echo",
+          "args": [
+            "teardown complete"
+          ]
+        }
+      },
+      {
+        "name": "wipe test store",
+        "run": {
+          "type": "tool-call",
+          "tool": "reset_store",
+          "input": {}
+        }
+      }
+    ]
+  },
+  "tests": [
+    {
+      "id": "get-charlie",
+      "name": "get_user › returns seeded user charlie",
+      "type": "tool-call",
+      "tool": "get_user",
+      "input": {
+        "id": "charlie"
+      },
+      "expect": {
+        "success": true,
+        "contains": "Charlie"
+      },
+      "tags": [
+        "happy-path"
+      ]
+    },
+    {
+      "id": "list-has-charlie",
+      "name": "list_users › charlie appears in list",
+      "type": "tool-call",
+      "tool": "list_users",
+      "input": {},
+      "expect": {
+        "success": true,
+        "contains": "charlie"
+      },
+      "tags": [
+        "happy-path"
+      ]
+    }
+  ]
+}

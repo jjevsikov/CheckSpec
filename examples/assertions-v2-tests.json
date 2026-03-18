@@ -1,0 +1,168 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jjevsikov/CheckSpec/main/packages/core/checkspec.schema.json",
+  "version": "1.0",
+  "name": "Assertions v2 — equals, notContains, matches, jsonPath",
+  "description": "Demonstrates the v0.2 assertion extensions: exact equality with equals, substring exclusion with notContains, regex matching with matches, and structured field extraction with jsonPath.",
+  "server": {
+    "command": "node",
+    "args": [
+      "demos/calculator-server/dist/index.js"
+    ]
+  },
+  "tests": [
+    {
+      "id": "add-equals-exact",
+      "name": "add › equals asserts exact JSON response text",
+      "type": "tool-call",
+      "tool": "add",
+      "input": {
+        "a": 5,
+        "b": 3
+      },
+      "expect": {
+        "success": true,
+        "equals": "{\"result\":8}"
+      },
+      "tags": ["assertions-v2", "equals"]
+    },
+    {
+      "id": "subtract-equals-exact",
+      "name": "subtract › equals asserts exact JSON response text",
+      "type": "tool-call",
+      "tool": "subtract",
+      "input": {
+        "a": 10,
+        "b": 4
+      },
+      "expect": {
+        "success": true,
+        "equals": "{\"result\":6}"
+      },
+      "tags": ["assertions-v2", "equals"]
+    },
+    {
+      "id": "divide-not-contains-error",
+      "name": "divide › notContains confirms no error text in successful division",
+      "type": "tool-call",
+      "tool": "divide",
+      "input": {
+        "a": 10,
+        "b": 2
+      },
+      "expect": {
+        "success": true,
+        "notContains": "error"
+      },
+      "tags": ["assertions-v2", "notContains"]
+    },
+    {
+      "id": "divide-not-contains-zero",
+      "name": "divide › notContains confirms zero is not in result of non-zero division",
+      "type": "tool-call",
+      "tool": "divide",
+      "input": {
+        "a": 9,
+        "b": 3
+      },
+      "expect": {
+        "success": true,
+        "notContains": "zero"
+      },
+      "tags": ["assertions-v2", "notContains"]
+    },
+    {
+      "id": "multiply-matches-json",
+      "name": "multiply › matches asserts result is valid JSON object shape",
+      "type": "tool-call",
+      "tool": "multiply",
+      "input": {
+        "a": 6,
+        "b": 7
+      },
+      "expect": {
+        "success": true,
+        "matches": "\\{\"result\":\\d+\\}"
+      },
+      "tags": ["assertions-v2", "matches"]
+    },
+    {
+      "id": "add-matches-numeric",
+      "name": "add › matches asserts result field contains only digits",
+      "type": "tool-call",
+      "tool": "add",
+      "input": {
+        "a": 100,
+        "b": 200
+      },
+      "expect": {
+        "success": true,
+        "matches": "\"result\":300"
+      },
+      "tags": ["assertions-v2", "matches"]
+    },
+    {
+      "id": "add-jsonpath-result",
+      "name": "add › jsonPath extracts result field and asserts its value",
+      "type": "tool-call",
+      "tool": "add",
+      "input": {
+        "a": 12,
+        "b": 8
+      },
+      "expect": {
+        "success": true,
+        "jsonPath": [
+          {
+            "path": "$.result",
+            "equals": "20"
+          }
+        ]
+      },
+      "tags": ["assertions-v2", "jsonPath"]
+    },
+    {
+      "id": "multiply-jsonpath-contains",
+      "name": "multiply › jsonPath extracts result field and asserts it contains expected digits",
+      "type": "tool-call",
+      "tool": "multiply",
+      "input": {
+        "a": 9,
+        "b": 9
+      },
+      "expect": {
+        "success": true,
+        "jsonPath": [
+          {
+            "path": "$.result",
+            "equals": "81"
+          }
+        ]
+      },
+      "tags": ["assertions-v2", "jsonPath"]
+    },
+    {
+      "id": "percentage-jsonpath-multiple",
+      "name": "percentage › jsonPath asserts both result and formatted fields",
+      "type": "tool-call",
+      "tool": "percentage",
+      "input": {
+        "value": 1,
+        "total": 4
+      },
+      "expect": {
+        "success": true,
+        "jsonPath": [
+          {
+            "path": "$.result",
+            "equals": "25"
+          },
+          {
+            "path": "$.formatted",
+            "contains": "%"
+          }
+        ]
+      },
+      "tags": ["assertions-v2", "jsonPath"]
+    }
+  ]
+}

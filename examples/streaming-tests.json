@@ -1,0 +1,178 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jjevsikov/CheckSpec/main/packages/core/checkspec.schema.json",
+  "version": "1.0",
+  "name": "Streaming Demo Tests",
+  "description": "Tests for the demo-streaming-server. Covers progress notification collection, chunk-level assertions, and timing budgets.",
+  "server": {
+    "command": "node",
+    "args": [
+      "demos/streaming-server/dist/index.js"
+    ]
+  },
+  "tests": [
+    {
+      "id": "countdown-basic",
+      "name": "stream_countdown › counts from 5 to 0",
+      "type": "streaming-tool-call",
+      "tool": "stream_countdown",
+      "input": {
+        "from": 5
+      },
+      "streamExpect": {
+        "minChunks": 5,
+        "finalContains": "done",
+        "maxTotalMs": 3000
+      },
+      "tags": [
+        "streaming",
+        "countdown"
+      ]
+    },
+    {
+      "id": "countdown-chunk-content",
+      "name": "stream_countdown › chunk messages are numeric strings",
+      "type": "streaming-tool-call",
+      "tool": "stream_countdown",
+      "input": {
+        "from": 3
+      },
+      "streamExpect": {
+        "minChunks": 3,
+        "maxTotalMs": 2000
+      },
+      "tags": [
+        "streaming",
+        "countdown"
+      ]
+    },
+    {
+      "id": "countdown-interval",
+      "name": "stream_countdown › chunks arrive within 500ms of each other",
+      "type": "streaming-tool-call",
+      "tool": "stream_countdown",
+      "input": {
+        "from": 4
+      },
+      "streamExpect": {
+        "minChunks": 4,
+        "maxChunkIntervalMs": 500,
+        "maxTotalMs": 3000
+      },
+      "tags": [
+        "streaming",
+        "countdown",
+        "backpressure"
+      ]
+    },
+    {
+      "id": "text-chunks-basic",
+      "name": "stream_text_chunks › chunks \"hello world\"",
+      "type": "streaming-tool-call",
+      "tool": "stream_text_chunks",
+      "input": {
+        "text": "hello world",
+        "chunkSize": 4
+      },
+      "streamExpect": {
+        "minChunks": 3,
+        "finalContains": "hello world",
+        "maxTotalMs": 2000
+      },
+      "tags": [
+        "streaming",
+        "text-chunks"
+      ]
+    },
+    {
+      "id": "text-chunks-content",
+      "name": "stream_text_chunks › each chunk contains expected text fragments",
+      "type": "streaming-tool-call",
+      "tool": "stream_text_chunks",
+      "input": {
+        "text": "abcabcabc",
+        "chunkSize": 3
+      },
+      "streamExpect": {
+        "minChunks": 3,
+        "chunkContains": "abc",
+        "finalContains": "abcabcabc",
+        "maxTotalMs": 2000
+      },
+      "tags": [
+        "streaming",
+        "text-chunks"
+      ]
+    },
+    {
+      "id": "slow-query-basic",
+      "name": "stream_slow_query › fetches 3 rows",
+      "type": "streaming-tool-call",
+      "tool": "stream_slow_query",
+      "input": {
+        "rows": 3
+      },
+      "streamExpect": {
+        "minChunks": 3,
+        "finalContains": "record_1",
+        "maxTotalMs": 3000
+      },
+      "tags": [
+        "streaming",
+        "slow-query"
+      ]
+    },
+    {
+      "id": "slow-query-progress-messages",
+      "name": "stream_slow_query › progress messages mention 'fetching row'",
+      "type": "streaming-tool-call",
+      "tool": "stream_slow_query",
+      "input": {
+        "rows": 2
+      },
+      "streamExpect": {
+        "minChunks": 2,
+        "chunkContains": "fetching row",
+        "maxTotalMs": 2000
+      },
+      "tags": [
+        "streaming",
+        "slow-query"
+      ]
+    },
+    {
+      "id": "slow-query-interval",
+      "name": "stream_slow_query › row fetches arrive within 600ms of each other",
+      "type": "streaming-tool-call",
+      "tool": "stream_slow_query",
+      "input": {
+        "rows": 3
+      },
+      "streamExpect": {
+        "minChunks": 3,
+        "maxChunkIntervalMs": 600,
+        "maxTotalMs": 3000
+      },
+      "tags": [
+        "streaming",
+        "slow-query",
+        "backpressure"
+      ]
+    },
+    {
+      "id": "countdown-deliberate-fail",
+      "name": "stream_countdown › deliberately failing (minChunks not met: got 5, expected 999)",
+      "type": "streaming-tool-call",
+      "tool": "stream_countdown",
+      "input": {
+        "from": 5
+      },
+      "streamExpect": {
+        "minChunks": 999
+      },
+      "tags": [
+        "streaming",
+        "expected-failure"
+      ]
+    }
+  ]
+}

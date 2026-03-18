@@ -1,0 +1,45 @@
+name: CheckSpec
+description: 'Test your MCP server for protocol conformance, schema fuzzing, and security vulnerabilities'
+author: 'CheckSpec'
+
+branding:
+  icon: 'shield'
+  color: 'blue'
+
+inputs:
+  server-command:
+    description: 'Command to start the MCP server (for stdio transport). Required if collection is not set.'
+    required: false
+  collection:
+    description: 'Path to a .checkspec.json collection file. Required if server-command is not set.'
+    required: false
+  working-directory:
+    description: 'Working directory to run the server from (useful for Python uv projects)'
+    required: false
+    default: ''
+  fuzz:
+    description: 'Enable full fuzz testing (all 19 edge cases + invalid/random inputs)'
+    required: false
+    default: 'false'
+  output:
+    description: 'Output format: console, json, or junit'
+    required: false
+    default: 'console'
+  fail-on-security:
+    description: 'Fail the action if any security findings are detected at HIGH or above'
+    required: false
+    default: 'true'
+
+outputs:
+  result:
+    description: 'Test result: "passed" or "failed"'
+  total-tests:
+    description: 'Total number of tests run'
+  failed-tests:
+    description: 'Number of failed tests'
+  security-findings:
+    description: 'Number of security findings detected'
+
+runs:
+  using: 'node20'
+  main: 'dist/action/index.js'

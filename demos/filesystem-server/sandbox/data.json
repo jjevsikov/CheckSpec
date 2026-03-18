@@ -1,0 +1,11 @@
+{
+  "demo": true,
+  "server": "filesystem-server",
+  "version": "1.0.0",
+  "description": "Sample JSON data file in the sandbox directory",
+  "records": [
+    { "id": 1, "name": "Alice", "role": "admin" },
+    { "id": 2, "name": "Bob", "role": "user" },
+    { "id": 3, "name": "Charlie", "role": "user" }
+  ]
+}

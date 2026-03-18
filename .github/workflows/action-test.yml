@@ -1,0 +1,42 @@
+name: Test GitHub Action
+
+on:
+  workflow_dispatch:  # disabled: run manually only
+
+jobs:
+  test-action:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install and build
+        run: npm ci && npm run build
+
+      - name: Build echo-server fixture
+        run: cd fixtures/echo-server && npm ci && npm run build
+
+      - name: Run action against echo-server
+        uses: ./
+        id: checkspec
+        with:
+          server-command: node fixtures/echo-server/dist/index.js
+          output: console
+          fail-on-security: 'false'
+
+      - name: Check action outputs
+        run: |
+          echo "Result: ${{ steps.checkspec.outputs.result }}"
+          echo "Total tests: ${{ steps.checkspec.outputs.total-tests }}"
+          echo "Failed tests: ${{ steps.checkspec.outputs.failed-tests }}"
+          echo "Security findings: ${{ steps.checkspec.outputs.security-findings }}"
+          if [[ "${{ steps.checkspec.outputs.total-tests }}" -lt "1" ]]; then
+            echo "Expected at least 1 test to have run"
+            exit 1
+          fi
+          echo "Action outputs validated ✓"

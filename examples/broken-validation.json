@@ -1,0 +1,47 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jjevsikov/CheckSpec/main/packages/core/checkspec.schema.json",
+  "version": "1.0",
+  "name": "Validation Demo Server",
+  "description": "This file intentionally contains typos to demonstrate CheckSpec's strict Zod schema validation. Run it with: npx checkspec test examples/broken-validation.json",
+  "server": {
+    "command": "node",
+    "args": [
+      "demos/calculator-server/dist/index.js"
+    ]
+  },
+  "tests": [
+    {
+      "id": "demo-typo-expect",
+      "name": "This test has a typo in the expect block",
+      "type": "tool-call",
+      "tool": "add",
+      "input": {
+        "a": 1,
+        "b": 2
+      },
+      "expect": {
+        "sucess": true,
+        "conttains": "3"
+      }
+    },
+    {
+      "id": "demo-typo-streaming",
+      "name": "This streaming test has unknown fields",
+      "type": "streaming-tool-call",
+      "tool": "countdown",
+      "input": {
+        "from": 5
+      },
+      "streamExpect": {
+        "minChunk": 5,
+        "finalContians": "done"
+      }
+    },
+    {
+      "id": "demo-missing-tool",
+      "name": "This test is missing the required 'tool' field",
+      "type": "tool-call",
+      "input": {}
+    }
+  ]
+}

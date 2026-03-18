@@ -1,0 +1,140 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jjevsikov/CheckSpec/main/packages/core/checkspec.schema.json",
+  "version": "1.0",
+  "name": "Stateful Server — Hooks Demo",
+  "description": "Demonstrates beforeAll/afterAll/beforeEach hooks with a stateful MCP server. beforeAll seeds a fixture user; afterAll wipes the store; beforeEach verifies connectivity before each test.",
+  "server": {
+    "command": "node",
+    "args": [
+      "demos/stateful-server/dist/index.js"
+    ]
+  },
+  "hooks": {
+    "beforeAll": [
+      {
+        "name": "seed fixture user alice",
+        "run": {
+          "type": "tool-call",
+          "tool": "create_user",
+          "input": {
+            "id": "alice",
+            "name": "Alice",
+            "email": "alice@example.com"
+          }
+        }
+      },
+      {
+        "name": "seed fixture user bob",
+        "run": {
+          "type": "tool-call",
+          "tool": "create_user",
+          "input": {
+            "id": "bob",
+            "name": "Bob",
+            "email": "bob@example.com"
+          }
+        }
+      }
+    ],
+    "afterAll": [
+      {
+        "name": "wipe test store",
+        "run": {
+          "type": "tool-call",
+          "tool": "reset_store",
+          "input": {}
+        }
+      }
+    ],
+    "beforeEach": [
+      {
+        "name": "verify store is reachable",
+        "run": {
+          "type": "tool-call",
+          "tool": "list_users",
+          "input": {}
+        }
+      }
+    ]
+  },
+  "tests": [
+    {
+      "id": "get-alice",
+      "name": "get_user › returns seeded user alice",
+      "type": "tool-call",
+      "tool": "get_user",
+      "input": {
+        "id": "alice"
+      },
+      "expect": {
+        "success": true,
+        "contains": "Alice"
+      },
+      "tags": [
+        "happy-path"
+      ]
+    },
+    {
+      "id": "get-bob",
+      "name": "get_user › returns seeded user bob",
+      "type": "tool-call",
+      "tool": "get_user",
+      "input": {
+        "id": "bob"
+      },
+      "expect": {
+        "success": true,
+        "contains": "Bob"
+      },
+      "tags": [
+        "happy-path"
+      ]
+    },
+    {
+      "id": "get-missing",
+      "name": "get_user › 404 for unknown id",
+      "type": "tool-call",
+      "tool": "get_user",
+      "input": {
+        "id": "does-not-exist"
+      },
+      "expect": {
+        "success": true,
+        "contains": "Not found"
+      },
+      "tags": [
+        "error-path"
+      ]
+    },
+    {
+      "id": "list-count",
+      "name": "list_users › count includes both seeded users",
+      "type": "tool-call",
+      "tool": "list_users",
+      "input": {},
+      "expect": {
+        "success": true,
+        "contains": "alice"
+      },
+      "tags": [
+        "happy-path"
+      ]
+    },
+    {
+      "id": "deliberately-failing",
+      "name": "get_user › deliberately fails — teardown still runs after this",
+      "type": "tool-call",
+      "tool": "get_user",
+      "input": {
+        "id": "alice"
+      },
+      "expect": {
+        "success": true,
+        "contains": "THIS_STRING_DOES_NOT_EXIST"
+      },
+      "tags": [
+        "expected-failure"
+      ]
+    }
+  ]
+}

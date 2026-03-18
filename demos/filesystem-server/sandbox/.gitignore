@@ -1,0 +1,6 @@
+# Ignore runtime artifacts created by checkspec scan/test (fuzz-generated files, write_file outputs)
+# Keep only the seed fixtures needed by the demo collection
+*
+!.gitignore
+!hello.txt
+!data.json

@@ -1,0 +1,409 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jjevsikov/CheckSpec/main/packages/core/checkspec.schema.json",
+  "version": "1.0",
+  "name": "Calculator Server — Demo Collection",
+  "description": "Tests a well-behaved calculator MCP server. All tests should pass. Covers arithmetic correctness across integers, decimals, negatives, and large numbers. Uses `schema` assertions to validate response shape, not just text content.",
+  "server": {
+    "command": "node",
+    "args": [
+      "demos/calculator-server/dist/index.js"
+    ]
+  },
+  "tests": [
+    {
+      "id": "protocol-init",
+      "name": "Initialization handshake",
+      "type": "protocol",
+      "tags": [
+        "protocol"
+      ]
+    },
+    {
+      "id": "add-integers",
+      "name": "add › 12 + 34 = 46",
+      "type": "tool-call",
+      "tool": "add",
+      "input": {
+        "a": 12,
+        "b": 34
+      },
+      "expect": {
+        "success": true,
+        "contains": "46",
+        "schema": {
+          "type": "object",
+          "required": [
+            "result"
+          ],
+          "properties": {
+            "result": {
+              "type": "number"
+            }
+          }
+        }
+      },
+      "tags": [
+        "tool",
+        "math"
+      ]
+    },
+    {
+      "id": "add-negatives",
+      "name": "add › -15 + 7 = -8 (negative operand)",
+      "type": "tool-call",
+      "tool": "add",
+      "input": {
+        "a": -15,
+        "b": 7
+      },
+      "expect": {
+        "success": true,
+        "contains": "-8"
+      },
+      "tags": [
+        "tool",
+        "math"
+      ]
+    },
+    {
+      "id": "add-floats",
+      "name": "add › 1.5 + 2.5 = 4 (floating-point operands)",
+      "type": "tool-call",
+      "tool": "add",
+      "input": {
+        "a": 1.5,
+        "b": 2.5
+      },
+      "expect": {
+        "success": true,
+        "contains": "4"
+      },
+      "tags": [
+        "tool",
+        "math"
+      ]
+    },
+    {
+      "id": "subtract-integers",
+      "name": "subtract › 100 - 37 = 63",
+      "type": "tool-call",
+      "tool": "subtract",
+      "input": {
+        "a": 100,
+        "b": 37
+      },
+      "expect": {
+        "success": true,
+        "contains": "63",
+        "schema": {
+          "type": "object",
+          "required": [
+            "result"
+          ],
+          "properties": {
+            "result": {
+              "type": "number"
+            }
+          }
+        }
+      },
+      "tags": [
+        "tool",
+        "math"
+      ]
+    },
+    {
+      "id": "subtract-to-negative",
+      "name": "subtract › 5 - 20 = -15 (negative result)",
+      "type": "tool-call",
+      "tool": "subtract",
+      "input": {
+        "a": 5,
+        "b": 20
+      },
+      "expect": {
+        "success": true,
+        "contains": "-15"
+      },
+      "tags": [
+        "tool",
+        "math"
+      ]
+    },
+    {
+      "id": "multiply-integers",
+      "name": "multiply › 6 × 7 = 42",
+      "type": "tool-call",
+      "tool": "multiply",
+      "input": {
+        "a": 6,
+        "b": 7
+      },
+      "expect": {
+        "success": true,
+        "contains": "42",
+        "schema": {
+          "type": "object",
+          "required": [
+            "result"
+          ],
+          "properties": {
+            "result": {
+              "type": "number"
+            }
+          }
+        }
+      },
+      "tags": [
+        "tool",
+        "math"
+      ]
+    },
+    {
+      "id": "multiply-by-zero",
+      "name": "multiply › 999 × 0 = 0",
+      "type": "tool-call",
+      "tool": "multiply",
+      "input": {
+        "a": 999,
+        "b": 0
+      },
+      "expect": {
+        "success": true,
+        "contains": "0"
+      },
+      "tags": [
+        "tool",
+        "math"
+      ]
+    },
+    {
+      "id": "multiply-large",
+      "name": "multiply › 1000 × 9999 = 9999000 (large numbers)",
+      "type": "tool-call",
+      "tool": "multiply",
+      "input": {
+        "a": 1000,
+        "b": 9999
+      },
+      "expect": {
+        "success": true,
+        "contains": "9999000"
+      },
+      "tags": [
+        "tool",
+        "math"
+      ]
+    },
+    {
+      "id": "divide-valid",
+      "name": "divide › 144 ÷ 12 = 12",
+      "type": "tool-call",
+      "tool": "divide",
+      "input": {
+        "a": 144,
+        "b": 12
+      },
+      "expect": {
+        "success": true,
+        "contains": "12",
+        "schema": {
+          "type": "object",
+          "required": [
+            "result"
+          ],
+          "properties": {
+            "result": {
+              "type": "number"
+            }
+          }
+        }
+      },
+      "tags": [
+        "tool",
+        "math"
+      ]
+    },
+    {
+      "id": "divide-decimal-result",
+      "name": "divide › 7 ÷ 4 = 1.75 (non-integer result)",
+      "type": "tool-call",
+      "tool": "divide",
+      "input": {
+        "a": 7,
+        "b": 4
+      },
+      "expect": {
+        "success": true,
+        "contains": "1.75"
+      },
+      "tags": [
+        "tool",
+        "math"
+      ]
+    },
+    {
+      "id": "divide-by-zero",
+      "name": "divide › division by zero returns error",
+      "type": "tool-call",
+      "tool": "divide",
+      "input": {
+        "a": 10,
+        "b": 0
+      },
+      "expect": {
+        "success": false
+      },
+      "tags": [
+        "tool",
+        "math",
+        "error-handling"
+      ]
+    },
+    {
+      "id": "power-valid",
+      "name": "power › 2^10 = 1024",
+      "type": "tool-call",
+      "tool": "power",
+      "input": {
+        "base": 2,
+        "exp": 10
+      },
+      "expect": {
+        "success": true,
+        "contains": "1024",
+        "schema": {
+          "type": "object",
+          "required": [
+            "result"
+          ],
+          "properties": {
+            "result": {
+              "type": "number"
+            }
+          }
+        }
+      },
+      "tags": [
+        "tool",
+        "math"
+      ]
+    },
+    {
+      "id": "power-zero-exponent",
+      "name": "power › x^0 = 1 (any base to the zero power)",
+      "type": "tool-call",
+      "tool": "power",
+      "input": {
+        "base": 999,
+        "exp": 0
+      },
+      "expect": {
+        "success": true,
+        "contains": "1"
+      },
+      "tags": [
+        "tool",
+        "math"
+      ]
+    },
+    {
+      "id": "percentage-valid",
+      "name": "percentage › 25 of 200 = 12.5%",
+      "type": "tool-call",
+      "tool": "percentage",
+      "input": {
+        "value": 25,
+        "total": 200
+      },
+      "expect": {
+        "success": true,
+        "contains": "12.5",
+        "schema": {
+          "type": "object",
+          "required": [
+            "result",
+            "formatted"
+          ],
+          "properties": {
+            "result": {
+              "type": "number"
+            },
+            "formatted": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "tags": [
+        "tool",
+        "math"
+      ]
+    },
+    {
+      "id": "percentage-full",
+      "name": "percentage › 100 of 100 = 100%",
+      "type": "tool-call",
+      "tool": "percentage",
+      "input": {
+        "value": 100,
+        "total": 100
+      },
+      "expect": {
+        "success": true,
+        "contains": "100"
+      },
+      "tags": [
+        "tool",
+        "math"
+      ]
+    },
+    {
+      "id": "percentage-zero-total",
+      "name": "percentage › zero total returns error",
+      "type": "tool-call",
+      "tool": "percentage",
+      "input": {
+        "value": 50,
+        "total": 0
+      },
+      "expect": {
+        "success": false
+      },
+      "tags": [
+        "tool",
+        "math",
+        "error-handling"
+      ]
+    },
+    {
+      "id": "resource-history",
+      "name": "calculator://history › returns JSON array of recent operations",
+      "type": "resource-read",
+      "uri": "calculator://history",
+      "tags": [
+        "resource"
+      ]
+    },
+    {
+      "id": "security-add",
+      "name": "add › security scan — numeric-only inputs, nothing echoed (should pass)",
+      "type": "security",
+      "tool": "add",
+      "securityThreshold": "medium",
+      "tags": [
+        "security"
+      ]
+    },
+    {
+      "id": "security-divide",
+      "name": "divide › security scan — numeric-only inputs (should pass)",
+      "type": "security",
+      "tool": "divide",
+      "securityThreshold": "medium",
+      "tags": [
+        "security"
+      ]
+    }
+  ]
+}

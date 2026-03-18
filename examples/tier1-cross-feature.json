@@ -1,0 +1,101 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jjevsikov/CheckSpec/main/packages/core/checkspec.schema.json",
+  "version": "1.0",
+  "name": "Tier 1 Cross-Feature — Parametrize + Retry",
+  "description": "Exercises parametrize and retry together. Each expanded case retries independently.",
+  "server": {
+    "command": "node",
+    "args": [
+      "demos/calculator-server/dist/index.js"
+    ]
+  },
+  "tests": [
+    {
+      "id": "add-retry-cases",
+      "name": "add › parametrized with retry",
+      "type": "tool-call",
+      "tool": "add",
+      "input": {
+        "a": 0,
+        "b": 0
+      },
+      "expect": {
+        "success": true
+      },
+      "retry": 1,
+      "retryDelayMs": 100,
+      "parametrize": [
+        {
+          "label": "simple sum",
+          "input": {
+            "a": 2,
+            "b": 3
+          },
+          "expect": {
+            "contains": "5"
+          }
+        },
+        {
+          "label": "negative sum",
+          "input": {
+            "a": -10,
+            "b": 7
+          },
+          "expect": {
+            "contains": "-3"
+          }
+        }
+      ]
+    },
+    {
+      "id": "divide-retry-cases",
+      "name": "divide › parametrized with retry",
+      "type": "tool-call",
+      "tool": "divide",
+      "input": {
+        "a": 1,
+        "b": 1
+      },
+      "retry": 2,
+      "retryDelayMs": 50,
+      "parametrize": [
+        {
+          "label": "clean division",
+          "input": {
+            "a": 100,
+            "b": 4
+          },
+          "expect": {
+            "success": true,
+            "contains": "25"
+          }
+        },
+        {
+          "label": "divide by zero error",
+          "input": {
+            "a": 1,
+            "b": 0
+          },
+          "expect": {
+            "success": false,
+            "contains": "zero"
+          }
+        }
+      ]
+    },
+    {
+      "id": "plain-no-param",
+      "name": "add › plain test (no parametrize, no retry)",
+      "type": "tool-call",
+      "tool": "add",
+      "input": {
+        "a": 1,
+        "b": 1
+      },
+      "expect": {
+        "success": true,
+        "contains": "2"
+      }
+    }
+  ]
+}

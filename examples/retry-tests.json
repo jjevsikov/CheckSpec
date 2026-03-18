@@ -1,0 +1,41 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jjevsikov/CheckSpec/main/packages/core/checkspec.schema.json",
+  "version": "1.0",
+  "name": "Retry Logic Demo",
+  "description": "Demonstrates the retry / retryDelayMs fields. A stable tool shows the 'passed on attempt N/M' annotation; an always-failing test shows 'failed after N attempts'.",
+  "server": {
+    "command": "node",
+    "args": [
+      "demos/stateful-server/dist/index.js"
+    ]
+  },
+  "tests": [
+    {
+      "id": "stable-with-retry",
+      "name": "get_user › stable tool with retry configured",
+      "type": "tool-call",
+      "tool": "get_user",
+      "input": {
+        "id": "does-not-exist"
+      },
+      "expect": {
+        "success": true,
+        "contains": "Not found"
+      },
+      "retry": 2,
+      "retryDelayMs": 200
+    },
+    {
+      "id": "exhaust-retries",
+      "name": "get_user › deliberately wrong expect exhausts retries",
+      "type": "tool-call",
+      "tool": "list_users",
+      "input": {},
+      "expect": {
+        "contains": "this-string-never-appears"
+      },
+      "retry": 2,
+      "retryDelayMs": 100
+    }
+  ]
+}

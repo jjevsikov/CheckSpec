@@ -1,0 +1,155 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jjevsikov/CheckSpec/main/packages/core/checkspec.schema.json",
+  "version": "1.0",
+  "name": "JSONPath Assertions — field extraction and array indexing",
+  "description": "Demonstrates the jsonPath assertion: extract named fields from JSON responses and assert their values. Shows dot-notation field access, nested field extraction, and array index access.",
+  "server": {
+    "command": "node",
+    "args": [
+      "demos/stateful-server/dist/index.js"
+    ]
+  },
+  "hooks": {
+    "beforeAll": [
+      {
+        "name": "seed: create user alpha",
+        "run": {
+          "type": "tool-call",
+          "tool": "create_user",
+          "input": {
+            "id": "jp-alpha",
+            "name": "Alpha User",
+            "email": "alpha@example.com"
+          }
+        }
+      },
+      {
+        "name": "seed: create user beta",
+        "run": {
+          "type": "tool-call",
+          "tool": "create_user",
+          "input": {
+            "id": "jp-beta",
+            "name": "Beta User",
+            "email": "beta@example.com"
+          }
+        }
+      }
+    ],
+    "afterAll": [
+      {
+        "name": "teardown: wipe store",
+        "run": {
+          "type": "tool-call",
+          "tool": "reset_store",
+          "input": {}
+        }
+      }
+    ]
+  },
+  "tests": [
+    {
+      "id": "get-user-jsonpath-id",
+      "name": "get_user › jsonPath extracts nested user.id field",
+      "type": "tool-call",
+      "tool": "get_user",
+      "input": {
+        "id": "jp-alpha"
+      },
+      "expect": {
+        "success": true,
+        "jsonPath": [
+          {
+            "path": "$.user.id",
+            "equals": "jp-alpha"
+          }
+        ]
+      },
+      "tags": ["jsonPath"]
+    },
+    {
+      "id": "get-user-jsonpath-multiple",
+      "name": "get_user › jsonPath asserts multiple fields in one test",
+      "type": "tool-call",
+      "tool": "get_user",
+      "input": {
+        "id": "jp-beta"
+      },
+      "expect": {
+        "success": true,
+        "jsonPath": [
+          {
+            "path": "$.user.id",
+            "equals": "jp-beta"
+          },
+          {
+            "path": "$.user.name",
+            "equals": "Beta User"
+          },
+          {
+            "path": "$.user.email",
+            "contains": "example.com"
+          }
+        ]
+      },
+      "tags": ["jsonPath"]
+    },
+    {
+      "id": "list-users-jsonpath-count",
+      "name": "list_users › jsonPath asserts top-level count field",
+      "type": "tool-call",
+      "tool": "list_users",
+      "input": {},
+      "expect": {
+        "success": true,
+        "jsonPath": [
+          {
+            "path": "$.count",
+            "equals": "2"
+          }
+        ]
+      },
+      "tags": ["jsonPath"]
+    },
+    {
+      "id": "list-users-jsonpath-array-index",
+      "name": "list_users › jsonPath with array index accesses first user",
+      "type": "tool-call",
+      "tool": "list_users",
+      "input": {},
+      "expect": {
+        "success": true,
+        "jsonPath": [
+          {
+            "path": "$.users[0].id",
+            "equals": "jp-alpha"
+          },
+          {
+            "path": "$.users[1].id",
+            "equals": "jp-beta"
+          }
+        ]
+      },
+      "tags": ["jsonPath", "array-index"]
+    },
+    {
+      "id": "get-user-jsonpath-matches",
+      "name": "get_user › jsonPath with matches asserts field shape via regex",
+      "type": "tool-call",
+      "tool": "get_user",
+      "input": {
+        "id": "jp-alpha"
+      },
+      "expect": {
+        "success": true,
+        "jsonPath": [
+          {
+            "path": "$.user.email",
+            "matches": "^[^@]+@[^@]+\\.[^@]+$"
+          }
+        ]
+      },
+      "tags": ["jsonPath", "matches"]
+    }
+  ]
+}

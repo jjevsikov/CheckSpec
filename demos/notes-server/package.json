@@ -1,0 +1,22 @@
+{
+  "name": "@checkspec-demos/notes-server",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "description": "CheckSpec demo: clean notes server — all tests pass, no security findings",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

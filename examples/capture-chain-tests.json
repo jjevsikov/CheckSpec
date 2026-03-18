@@ -1,0 +1,87 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jjevsikov/CheckSpec/main/packages/core/checkspec.schema.json",
+  "version": "1.0",
+  "name": "Capture Chain — test-level capture and template variables",
+  "description": "Demonstrates test-level capture: the first test creates a user and captures its id, the second test uses {{userId}} to look up that same user without hard-coding the ID.",
+  "server": {
+    "command": "node",
+    "args": [
+      "demos/stateful-server/dist/index.js"
+    ]
+  },
+  "hooks": {
+    "afterAll": [
+      {
+        "name": "teardown: wipe store",
+        "run": {
+          "type": "tool-call",
+          "tool": "reset_store",
+          "input": {}
+        }
+      }
+    ]
+  },
+  "tests": [
+    {
+      "id": "create-user-capture",
+      "name": "create_user › creates user and captures generated id",
+      "type": "tool-call",
+      "tool": "create_user",
+      "input": {
+        "id": "chain-user-001",
+        "name": "Chain User",
+        "email": "chain@example.com"
+      },
+      "expect": {
+        "success": true,
+        "contains": "Chain User"
+      },
+      "capture": {
+        "userId": "$.user.id",
+        "userName": "$.user.name"
+      },
+      "tags": ["capture-chain"]
+    },
+    {
+      "id": "get-user-by-captured-id",
+      "name": "get_user › retrieves user using captured {{userId}}",
+      "type": "tool-call",
+      "tool": "get_user",
+      "input": {
+        "id": "{{userId}}"
+      },
+      "expect": {
+        "success": true,
+        "contains": "{{userName}}"
+      },
+      "tags": ["capture-chain"]
+    },
+    {
+      "id": "delete-user-by-captured-id",
+      "name": "delete_user › deletes user using captured {{userId}}",
+      "type": "tool-call",
+      "tool": "delete_user",
+      "input": {
+        "id": "{{userId}}"
+      },
+      "expect": {
+        "success": true
+      },
+      "tags": ["capture-chain"]
+    },
+    {
+      "id": "get-user-after-delete",
+      "name": "get_user › returns not found after deletion",
+      "type": "tool-call",
+      "tool": "get_user",
+      "input": {
+        "id": "{{userId}}"
+      },
+      "expect": {
+        "success": true,
+        "contains": "Not found"
+      },
+      "tags": ["capture-chain"]
+    }
+  ]
+}

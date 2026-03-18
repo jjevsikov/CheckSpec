@@ -1,0 +1,57 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+*.tsbuildinfo
+
+# Turbo cache
+.turbo/
+
+# Test / coverage
+coverage/
+*.lcov
+junit*.xml
+test-results.xml
+
+# npm pack output
+*.tgz
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
+
+# Temp
+tmp/
+*.tmp
+
+# CheckSpec runtime artifacts
+checkspec-recording.json
+checkspec-snapshot.json
+
+# Broken node_modules directories (not real installs)
+node_modules_broken/
+
+# Development-only (present locally, never pushed to public repo)
+_internal/
+CLAUDE.md
+scripts/ship.sh
+
+# Keep:
+# .claude/   — AI agent memory and project config
+# .github/   — CI workflows and GitHub config

@@ -1,0 +1,67 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jjevsikov/CheckSpec/main/packages/core/checkspec.schema.json",
+  "version": "1.0",
+  "name": "Optional IDs Demo",
+  "description": "Demonstrates that the id field is optional — CheckSpec auto-generates stable IDs from test names",
+  "server": {
+    "command": "node",
+    "args": [
+      "demos/calculator-server/dist/index.js"
+    ]
+  },
+  "tests": [
+    {
+      "name": "add › positive numbers",
+      "type": "tool-call",
+      "tool": "add",
+      "input": {
+        "a": 3,
+        "b": 4
+      },
+      "expect": {
+        "success": true,
+        "contains": "7"
+      }
+    },
+    {
+      "name": "add › negative numbers",
+      "type": "tool-call",
+      "tool": "add",
+      "input": {
+        "a": -5,
+        "b": -3
+      },
+      "expect": {
+        "success": true,
+        "contains": "-8"
+      }
+    },
+    {
+      "id": "explicit-multiply",
+      "name": "multiply › explicit ID",
+      "type": "tool-call",
+      "tool": "multiply",
+      "input": {
+        "a": 6,
+        "b": 7
+      },
+      "expect": {
+        "success": true,
+        "contains": "42"
+      }
+    },
+    {
+      "name": "subtract › basic",
+      "type": "tool-call",
+      "tool": "subtract",
+      "input": {
+        "a": 10,
+        "b": 3
+      },
+      "expect": {
+        "success": true,
+        "contains": "7"
+      }
+    }
+  ]
+}

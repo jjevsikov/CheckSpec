@@ -1,0 +1,34 @@
+{
+  "name": "checkspec",
+  "author": "jjevsikov",
+  "private": true,
+  "version": "0.2.0",
+  "workspaces": [
+    "packages/*",
+    "fixtures/*",
+    "demos/*"
+  ],
+  "scripts": {
+    "build": "./node_modules/.bin/turbo build",
+    "test": "./node_modules/.bin/turbo build && ./node_modules/.bin/vitest run",
+    "coverage": "./node_modules/.bin/turbo build && ./node_modules/.bin/vitest run --coverage",
+    "lint": "./node_modules/.bin/turbo lint",
+    "dev": "./node_modules/.bin/turbo dev",
+    "test:integration": "bash scripts/integration-test.sh",
+    "demo:build": "bash demos/build-all.sh",
+    "demo": "bash demos/run-all.sh"
+  },
+  "devDependencies": {
+    "@checkspec/cli": "*",
+    "@checkspec/core": "*",
+    "@types/node": "^20.0.0",
+    "@vitest/coverage-v8": "^4.1.0",
+    "turbo": "^2.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.0"
+  },
+  "packageManager": "npm@11.6.2",
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

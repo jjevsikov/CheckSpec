@@ -1,0 +1,7 @@
+Hello from the CheckSpec filesystem demo!
+
+This file lives in the sandbox directory. The filesystem-server exposes
+tools to read, write, and list files in this directory.
+
+Try running the CheckSpec security scan against this server to see how
+the security scanner detects the prompt injection passthrough vulnerability.

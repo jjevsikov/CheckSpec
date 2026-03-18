@@ -1,0 +1,113 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jjevsikov/CheckSpec/main/packages/core/checkspec.schema.json",
+  "version": "1.0",
+  "name": "Parametrized Test Examples",
+  "description": "Demonstrates the parametrize field — one test definition expanded into multiple cases",
+  "server": {
+    "command": "node",
+    "args": [
+      "demos/calculator-server/dist/index.js"
+    ]
+  },
+  "tests": [
+    {
+      "id": "add-cases",
+      "name": "add › arithmetic cases",
+      "type": "tool-call",
+      "tool": "add",
+      "input": {
+        "a": 0,
+        "b": 0
+      },
+      "expect": {
+        "success": true
+      },
+      "parametrize": [
+        {
+          "label": "positive numbers",
+          "input": {
+            "a": 3,
+            "b": 4
+          },
+          "expect": {
+            "contains": "7"
+          }
+        },
+        {
+          "label": "negative numbers",
+          "input": {
+            "a": -5,
+            "b": -3
+          },
+          "expect": {
+            "contains": "-8"
+          }
+        },
+        {
+          "label": "zero identity",
+          "input": {
+            "a": 42,
+            "b": 0
+          },
+          "expect": {
+            "contains": "42"
+          }
+        },
+        {
+          "label": "large numbers",
+          "input": {
+            "a": 1000000,
+            "b": 2000000
+          },
+          "expect": {
+            "contains": "3000000"
+          }
+        }
+      ]
+    },
+    {
+      "id": "divide-cases",
+      "name": "divide › success and error cases",
+      "type": "tool-call",
+      "tool": "divide",
+      "input": {
+        "a": 1,
+        "b": 1
+      },
+      "parametrize": [
+        {
+          "label": "whole number result",
+          "input": {
+            "a": 10,
+            "b": 2
+          },
+          "expect": {
+            "success": true,
+            "contains": "5"
+          }
+        },
+        {
+          "label": "decimal result",
+          "input": {
+            "a": 1,
+            "b": 3
+          },
+          "expect": {
+            "success": true
+          }
+        },
+        {
+          "label": "divide by zero returns error",
+          "input": {
+            "a": 9,
+            "b": 0
+          },
+          "expect": {
+            "success": false,
+            "contains": "zero"
+          }
+        }
+      ]
+    }
+  ]
+}

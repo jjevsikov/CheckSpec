@@ -1,0 +1,22 @@
+{
+  "name": "@checkspec-demos/task-manager-server",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "description": "CheckSpec demo: task manager with a dueDate validation bug and a coercive instruction in a tool description",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

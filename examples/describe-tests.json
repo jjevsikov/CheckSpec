@@ -1,0 +1,181 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jjevsikov/CheckSpec/main/packages/core/checkspec.schema.json",
+  "version": "1.0",
+  "name": "Stateful Server — Describe Blocks Demo",
+  "description": "Demonstrates describe blocks with per-group hooks. The 'user management' group seeds and cleans up its own users. The 'store operations' group runs independently with no group-level setup. Top-level hooks apply to all groups.",
+  "server": {
+    "command": "node",
+    "args": [
+      "demos/stateful-server/dist/index.js"
+    ]
+  },
+  "hooks": {
+    "beforeEach": [
+      {
+        "name": "verify store is reachable",
+        "run": {
+          "type": "tool-call",
+          "tool": "list_users",
+          "input": {}
+        }
+      }
+    ],
+    "afterAll": [
+      {
+        "name": "final cleanup — wipe store",
+        "run": {
+          "type": "tool-call",
+          "tool": "reset_store",
+          "input": {}
+        }
+      }
+    ]
+  },
+  "describe": [
+    {
+      "name": "user management",
+      "hooks": {
+        "beforeAll": [
+          {
+            "name": "seed alice for user tests",
+            "run": {
+              "type": "tool-call",
+              "tool": "create_user",
+              "input": {
+                "id": "alice",
+                "name": "Alice",
+                "email": "alice@example.com"
+              }
+            }
+          },
+          {
+            "name": "seed bob for user tests",
+            "run": {
+              "type": "tool-call",
+              "tool": "create_user",
+              "input": {
+                "id": "bob",
+                "name": "Bob",
+                "email": "bob@example.com"
+              }
+            }
+          }
+        ],
+        "afterAll": [
+          {
+            "name": "clean up user test data",
+            "run": {
+              "type": "tool-call",
+              "tool": "reset_store",
+              "input": {}
+            }
+          }
+        ]
+      },
+      "tests": [
+        {
+          "id": "get-alice",
+          "name": "get_user › returns seeded alice",
+          "type": "tool-call",
+          "tool": "get_user",
+          "input": {
+            "id": "alice"
+          },
+          "expect": {
+            "success": true,
+            "contains": "Alice"
+          },
+          "tags": [
+            "happy-path"
+          ]
+        },
+        {
+          "id": "get-bob",
+          "name": "get_user › returns seeded bob",
+          "type": "tool-call",
+          "tool": "get_user",
+          "input": {
+            "id": "bob"
+          },
+          "expect": {
+            "success": true,
+            "contains": "Bob"
+          },
+          "tags": [
+            "happy-path"
+          ]
+        },
+        {
+          "id": "get-missing",
+          "name": "get_user › 404 for unknown id",
+          "type": "tool-call",
+          "tool": "get_user",
+          "input": {
+            "id": "does-not-exist"
+          },
+          "expect": {
+            "success": true,
+            "contains": "Not found"
+          },
+          "tags": [
+            "error-path"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "store operations",
+      "tests": [
+        {
+          "id": "list-empty",
+          "name": "list_users › empty after previous group cleanup",
+          "type": "tool-call",
+          "tool": "list_users",
+          "input": {},
+          "expect": {
+            "success": true
+          },
+          "tags": [
+            "happy-path"
+          ]
+        },
+        {
+          "id": "create-then-list",
+          "name": "create_user › creates and lists carol",
+          "type": "tool-call",
+          "tool": "create_user",
+          "input": {
+            "id": "carol",
+            "name": "Carol",
+            "email": "carol@example.com"
+          },
+          "expect": {
+            "success": true,
+            "contains": "Carol"
+          },
+          "tags": [
+            "happy-path"
+          ]
+        }
+      ]
+    }
+  ],
+  "tests": [
+    {
+      "id": "final-check",
+      "name": "store › has carol from previous group (top-level test)",
+      "type": "tool-call",
+      "tool": "get_user",
+      "input": {
+        "id": "carol"
+      },
+      "expect": {
+        "success": true,
+        "contains": "Carol"
+      },
+      "tags": [
+        "happy-path"
+      ]
+    }
+  ]
+}

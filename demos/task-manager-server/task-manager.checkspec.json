@@ -1,0 +1,335 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jjevsikov/CheckSpec/main/packages/core/checkspec.schema.json",
+  "version": "1.0",
+  "name": "Task Manager Server — Demo Collection",
+  "description": "Tests a task management MCP server with two intentional issues: (1) missing dueDate validation — the collection test for invalid dates will FAIL, and (2) a coercive SYSTEM: directive in the list_tasks description — the security scan detects a CRITICAL finding. All 9 tools are exercised, including update_task and delete_project.",
+  "server": {
+    "command": "node",
+    "args": [
+      "demos/task-manager-server/dist/index.js"
+    ]
+  },
+  "tests": [
+    {
+      "id": "protocol-init",
+      "name": "Initialization handshake",
+      "type": "protocol",
+      "tags": [
+        "protocol"
+      ]
+    },
+    {
+      "id": "get-seeded-project",
+      "name": "get_project › seeded proj_demo_0001 — validates response shape",
+      "type": "tool-call",
+      "tool": "get_project",
+      "input": {
+        "id": "proj_demo_0001"
+      },
+      "expect": {
+        "success": true,
+        "contains": "Demo Project",
+        "schema": {
+          "type": "object",
+          "required": [
+            "id",
+            "name",
+            "description",
+            "createdAt"
+          ]
+        }
+      },
+      "tags": [
+        "tool",
+        "project"
+      ]
+    },
+    {
+      "id": "get-project-missing",
+      "name": "get_project › non-existent ID returns isError (error-path)",
+      "type": "tool-call",
+      "tool": "get_project",
+      "input": {
+        "id": "proj_does_not_exist"
+      },
+      "expect": {
+        "success": false
+      },
+      "tags": [
+        "tool",
+        "project",
+        "error-handling"
+      ]
+    },
+    {
+      "id": "list-projects",
+      "name": "list_projects › returns both seeded projects — validates array shape",
+      "type": "tool-call",
+      "tool": "list_projects",
+      "input": {},
+      "expect": {
+        "success": true,
+        "contains": "proj_demo_0001",
+        "schema": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "name",
+              "createdAt"
+            ]
+          }
+        }
+      },
+      "tags": [
+        "tool",
+        "project"
+      ]
+    },
+    {
+      "id": "get-seeded-task",
+      "name": "get_task › seeded task_demo_0001 — validates response shape",
+      "type": "tool-call",
+      "tool": "get_task",
+      "input": {
+        "id": "task_demo_0001"
+      },
+      "expect": {
+        "success": true,
+        "contains": "Initial task",
+        "schema": {
+          "type": "object",
+          "required": [
+            "id",
+            "projectId",
+            "title",
+            "status",
+            "priority",
+            "createdAt"
+          ]
+        }
+      },
+      "tags": [
+        "tool",
+        "task"
+      ]
+    },
+    {
+      "id": "list-tasks-for-project",
+      "name": "list_tasks › returns tasks in proj_demo_0001 (contains seeded task)",
+      "type": "tool-call",
+      "tool": "list_tasks",
+      "input": {
+        "projectId": "proj_demo_0001"
+      },
+      "expect": {
+        "success": true,
+        "contains": "task_demo_0001"
+      },
+      "tags": [
+        "tool",
+        "task"
+      ]
+    },
+    {
+      "id": "update-seeded-task",
+      "name": "update_task › sets task_demo_0001 to in_progress / high priority",
+      "type": "tool-call",
+      "tool": "update_task",
+      "input": {
+        "id": "task_demo_0001",
+        "status": "in_progress",
+        "priority": "high"
+      },
+      "expect": {
+        "success": true,
+        "contains": "in_progress",
+        "schema": {
+          "type": "object",
+          "required": [
+            "id",
+            "status",
+            "priority"
+          ],
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "todo",
+                "in_progress",
+                "done"
+              ]
+            },
+            "priority": {
+              "type": "string",
+              "enum": [
+                "low",
+                "medium",
+                "high"
+              ]
+            }
+          }
+        }
+      },
+      "tags": [
+        "tool",
+        "task"
+      ]
+    },
+    {
+      "id": "complete-seeded-task",
+      "name": "complete_task › marks task_demo_0001 as done",
+      "type": "tool-call",
+      "tool": "complete_task",
+      "input": {
+        "id": "task_demo_0001"
+      },
+      "expect": {
+        "success": true,
+        "contains": "done"
+      },
+      "tags": [
+        "tool",
+        "task"
+      ]
+    },
+    {
+      "id": "create-task-valid",
+      "name": "create_task › valid ISO dueDate accepted",
+      "type": "tool-call",
+      "tool": "create_task",
+      "input": {
+        "projectId": "proj_demo_0001",
+        "title": "Properly dated task",
+        "priority": "high",
+        "dueDate": "2024-12-31T00:00:00.000Z"
+      },
+      "expect": {
+        "success": true,
+        "contains": "2024-12-31"
+      },
+      "tags": [
+        "tool",
+        "task"
+      ]
+    },
+    {
+      "id": "create-task-invalid-date",
+      "name": "create_task › invalid dueDate should be rejected — BUG: server accepts it",
+      "type": "tool-call",
+      "tool": "create_task",
+      "input": {
+        "projectId": "proj_demo_0001",
+        "title": "Task with garbage date",
+        "dueDate": "not-a-real-date"
+      },
+      "expect": {
+        "success": false
+      },
+      "tags": [
+        "tool",
+        "task",
+        "bug"
+      ]
+    },
+    {
+      "id": "create-project-new",
+      "name": "create_project › creates a new project",
+      "type": "tool-call",
+      "tool": "create_project",
+      "input": {
+        "name": "Test Project",
+        "description": "Created by CheckSpec"
+      },
+      "expect": {
+        "success": true,
+        "contains": "Test Project"
+      },
+      "tags": [
+        "tool",
+        "project"
+      ]
+    },
+    {
+      "id": "delete-scratch-project",
+      "name": "delete_project › deletes seeded proj_demo_0002 (Scratch Project)",
+      "type": "tool-call",
+      "tool": "delete_project",
+      "input": {
+        "id": "proj_demo_0002"
+      },
+      "expect": {
+        "success": true,
+        "contains": "proj_demo_0002"
+      },
+      "tags": [
+        "tool",
+        "project"
+      ]
+    },
+    {
+      "id": "delete-project-missing",
+      "name": "delete_project › non-existent ID returns isError (error-path)",
+      "type": "tool-call",
+      "tool": "delete_project",
+      "input": {
+        "id": "proj_does_not_exist"
+      },
+      "expect": {
+        "success": false
+      },
+      "tags": [
+        "tool",
+        "project",
+        "error-handling"
+      ]
+    },
+    {
+      "id": "prompt-project-summary",
+      "name": "project_summary › generates a summary prompt",
+      "type": "prompt-get",
+      "promptName": "project_summary",
+      "promptArgs": {
+        "projectId": "proj_demo_0001"
+      },
+      "tags": [
+        "prompt"
+      ]
+    },
+    {
+      "id": "prompt-task-report",
+      "name": "task_report › generates a detailed report prompt",
+      "type": "prompt-get",
+      "promptName": "task_report",
+      "promptArgs": {
+        "projectId": "proj_demo_0001",
+        "format": "detailed"
+      },
+      "tags": [
+        "prompt"
+      ]
+    },
+    {
+      "id": "security-list-tasks",
+      "name": "list_tasks › security scan — CRITICAL finding expected (SYSTEM: directive in description)",
+      "type": "security",
+      "tool": "list_tasks",
+      "securityThreshold": "high",
+      "tags": [
+        "security"
+      ]
+    },
+    {
+      "id": "security-create-task",
+      "name": "create_task › security scan — no injection patterns (should pass)",
+      "type": "security",
+      "tool": "create_task",
+      "securityThreshold": "medium",
+      "tags": [
+        "security"
+      ]
+    }
+  ]
+}

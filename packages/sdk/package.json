@@ -1,0 +1,53 @@
+{
+  "name": "@checkspec/sdk",
+  "version": "0.2.0",
+  "type": "module",
+  "description": "Programmatic SDK for embedding CheckSpec in test frameworks, CI scripts, and other tools",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "testing",
+    "sdk",
+    "llm"
+  ],
+  "homepage": "https://github.com/jjevsikov/CheckSpec",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jjevsikov/CheckSpec.git"
+  },
+  "author": "jjevsikov",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jjevsikov/CheckSpec/issues"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "lint": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@checkspec/core": "^0.2.0",
+    "@modelcontextprotocol/sdk": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

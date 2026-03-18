@@ -1,0 +1,39 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jjevsikov/CheckSpec/main/packages/core/checkspec.schema.json",
+  "version": "1.0",
+  "name": "Timeout Tests — per-test timeoutMs",
+  "description": "Demonstrates the timeoutMs field: slow-op takes 10 seconds and is expected to fail under a 500ms budget; divide is fast and passes with a generous 5000ms budget.",
+  "server": {
+    "command": "node",
+    "args": [
+      "fixtures/buggy-server/dist/index.js"
+    ]
+  },
+  "tests": [
+    {
+      "id": "slow-op-timeout",
+      "name": "slow-op › times out — 500ms budget, tool takes 10s",
+      "type": "tool-call",
+      "tool": "slow-op",
+      "input": {},
+      "timeoutMs": 500,
+      "tags": ["timeout", "expected-failure"]
+    },
+    {
+      "id": "divide-within-budget",
+      "name": "divide › completes within generous 5000ms budget",
+      "type": "tool-call",
+      "tool": "divide",
+      "input": {
+        "a": 100,
+        "b": 4
+      },
+      "timeoutMs": 5000,
+      "expect": {
+        "success": true,
+        "contains": "25"
+      },
+      "tags": ["timeout", "happy-path"]
+    }
+  ]
+}

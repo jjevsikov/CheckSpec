@@ -1,0 +1,281 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jjevsikov/CheckSpec/main/packages/core/checkspec.schema.json",
+  "version": "1.0",
+  "name": "Filesystem Server — Demo Collection",
+  "description": "Tests a filesystem MCP server with a known security vulnerability: read_file echoes user-supplied paths in error messages, exposing a prompt-injection passthrough surface. The collection also demonstrates a full write → read → delete round-trip, schema validation on structured responses, and error-path coverage for all five tools.",
+  "server": {
+    "command": "node",
+    "args": [
+      "demos/filesystem-server/dist/index.js"
+    ]
+  },
+  "tests": [
+    {
+      "id": "protocol-init",
+      "name": "Initialization handshake",
+      "type": "protocol",
+      "tags": [
+        "protocol"
+      ]
+    },
+    {
+      "id": "read-hello-txt",
+      "name": "read_file › sandbox/hello.txt returns expected content",
+      "type": "tool-call",
+      "tool": "read_file",
+      "input": {
+        "path": "hello.txt"
+      },
+      "expect": {
+        "success": true,
+        "contains": "CheckSpec"
+      },
+      "tags": [
+        "tool",
+        "read"
+      ]
+    },
+    {
+      "id": "read-data-json",
+      "name": "read_file › sandbox/data.json — JSON file, verify key present",
+      "type": "tool-call",
+      "tool": "read_file",
+      "input": {
+        "path": "data.json"
+      },
+      "expect": {
+        "success": true,
+        "contains": "Alice"
+      },
+      "tags": [
+        "tool",
+        "read"
+      ]
+    },
+    {
+      "id": "read-nonexistent",
+      "name": "read_file › missing file returns isError (error-path)",
+      "type": "tool-call",
+      "tool": "read_file",
+      "input": {
+        "path": "does-not-exist.txt"
+      },
+      "expect": {
+        "success": false
+      },
+      "tags": [
+        "tool",
+        "read",
+        "error-handling"
+      ]
+    },
+    {
+      "id": "list-sandbox-root",
+      "name": "list_directory › sandbox root — each entry has name + type fields",
+      "type": "tool-call",
+      "tool": "list_directory",
+      "input": {
+        "path": ""
+      },
+      "expect": {
+        "success": true,
+        "contains": "hello.txt",
+        "schema": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "type"
+            ],
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "file",
+                  "directory"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "tags": [
+        "tool",
+        "list"
+      ]
+    },
+    {
+      "id": "file-info-hello",
+      "name": "file_info › hello.txt — validates path, type, size, modified fields",
+      "type": "tool-call",
+      "tool": "file_info",
+      "input": {
+        "path": "hello.txt"
+      },
+      "expect": {
+        "success": true,
+        "contains": "file",
+        "schema": {
+          "type": "object",
+          "required": [
+            "path",
+            "type",
+            "size",
+            "modified"
+          ],
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "file",
+                "directory"
+              ]
+            },
+            "size": {
+              "type": "number"
+            },
+            "modified": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "tags": [
+        "tool",
+        "meta"
+      ]
+    },
+    {
+      "id": "file-info-missing",
+      "name": "file_info › non-existent path returns isError (error-path)",
+      "type": "tool-call",
+      "tool": "file_info",
+      "input": {
+        "path": "no-such-file.txt"
+      },
+      "expect": {
+        "success": false
+      },
+      "tags": [
+        "tool",
+        "meta",
+        "error-handling"
+      ]
+    },
+    {
+      "id": "write-file",
+      "name": "write_file › creates checkspec-roundtrip.txt in sandbox",
+      "type": "tool-call",
+      "tool": "write_file",
+      "input": {
+        "path": "checkspec-roundtrip.txt",
+        "content": "Round-trip written by CheckSpec"
+      },
+      "expect": {
+        "success": true,
+        "contains": "written"
+      },
+      "tags": [
+        "tool",
+        "write"
+      ]
+    },
+    {
+      "id": "read-written-file",
+      "name": "read_file › reads back the just-written file (write → read round-trip)",
+      "type": "tool-call",
+      "tool": "read_file",
+      "input": {
+        "path": "checkspec-roundtrip.txt"
+      },
+      "expect": {
+        "success": true,
+        "contains": "Round-trip written by CheckSpec"
+      },
+      "tags": [
+        "tool",
+        "read",
+        "round-trip"
+      ]
+    },
+    {
+      "id": "resource-sandbox",
+      "name": "filesystem://sandbox › resource lists directory contents",
+      "type": "resource-read",
+      "uri": "filesystem://sandbox",
+      "tags": [
+        "resource"
+      ]
+    },
+    {
+      "id": "resource-stats",
+      "name": "filesystem://stats › resource returns file count and total size",
+      "type": "resource-read",
+      "uri": "filesystem://stats",
+      "tags": [
+        "resource"
+      ]
+    },
+    {
+      "id": "delete-written-file",
+      "name": "delete_file › deletes the round-trip test file",
+      "type": "tool-call",
+      "tool": "delete_file",
+      "input": {
+        "path": "checkspec-roundtrip.txt"
+      },
+      "expect": {
+        "success": true,
+        "contains": "Deleted"
+      },
+      "tags": [
+        "tool",
+        "write"
+      ]
+    },
+    {
+      "id": "delete-missing-file",
+      "name": "delete_file › deleting non-existent file returns isError (error-path)",
+      "type": "tool-call",
+      "tool": "delete_file",
+      "input": {
+        "path": "never-created-xyz.txt"
+      },
+      "expect": {
+        "success": false
+      },
+      "tags": [
+        "tool",
+        "write",
+        "error-handling"
+      ]
+    },
+    {
+      "id": "security-read-file",
+      "name": "read_file › security scan — HIGH finding expected (path echoed in errors)",
+      "type": "security",
+      "tool": "read_file",
+      "securityThreshold": "high",
+      "tags": [
+        "security"
+      ]
+    },
+    {
+      "id": "security-write-file",
+      "name": "write_file › security scan — content not echoed in response (should pass)",
+      "type": "security",
+      "tool": "write_file",
+      "securityThreshold": "high",
+      "tags": [
+        "security"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "name": "@checkspec/web",
+  "version": "0.1.0",
+  "private": true,
+  "description": "CheckSpec web dashboard — React/Next.js frontend (placeholder). Talks to @checkspec/server via REST API.",
+  "license": "MIT",
+  "scripts": {
+    "build": "echo 'Dashboard placeholder — no build step yet. API layer is in packages/server/'",
+    "dev": "echo 'Dashboard placeholder — no dev server yet.'"
+  }
+}

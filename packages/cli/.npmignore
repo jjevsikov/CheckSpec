@@ -1,0 +1,6 @@
+src/
+*.test.ts
+tsconfig.json
+tsconfig.tsbuildinfo
+vitest.config.ts
+.turbo/

@@ -1,0 +1,375 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jjevsikov/CheckSpec/main/packages/core/checkspec.schema.json",
+  "version": "1.0",
+  "name": "Notes Server — Demo Collection",
+  "description": "Tests a clean, well-implemented notes CRUD server. All tests should pass and the security scan should find nothing. This is what a healthy CheckSpec result looks like. Demonstrates schema validation, write-then-list round-trips, and error-path coverage.",
+  "server": {
+    "command": "node",
+    "args": [
+      "demos/notes-server/dist/index.js"
+    ]
+  },
+  "tests": [
+    {
+      "id": "protocol-init",
+      "name": "Initialization handshake",
+      "type": "protocol",
+      "tags": [
+        "protocol"
+      ]
+    },
+    {
+      "id": "get-seeded-note",
+      "name": "get_note › seeded note_demo_0001 — validates full response shape",
+      "type": "tool-call",
+      "tool": "get_note",
+      "input": {
+        "id": "note_demo_0001"
+      },
+      "expect": {
+        "success": true,
+        "contains": "Getting Started",
+        "schema": {
+          "type": "object",
+          "required": [
+            "id",
+            "title",
+            "content",
+            "tags",
+            "createdAt",
+            "updatedAt"
+          ],
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "content": {
+              "type": "string"
+            },
+            "tags": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "createdAt": {
+              "type": "string"
+            },
+            "updatedAt": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "tags": [
+        "tool",
+        "read"
+      ]
+    },
+    {
+      "id": "list-notes-all",
+      "name": "list_notes › returns both seeded notes — validates summary shape",
+      "type": "tool-call",
+      "tool": "list_notes",
+      "input": {},
+      "expect": {
+        "success": true,
+        "contains": "note_demo_0001",
+        "schema": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "title",
+              "tags",
+              "updatedAt"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "tags": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "updatedAt": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "tags": [
+        "tool",
+        "read"
+      ]
+    },
+    {
+      "id": "list-notes-by-tag",
+      "name": "list_notes › filter by tag 'meeting' returns exactly one note",
+      "type": "tool-call",
+      "tool": "list_notes",
+      "input": {
+        "tag": "meeting"
+      },
+      "expect": {
+        "success": true,
+        "contains": "Meeting Notes"
+      },
+      "tags": [
+        "tool",
+        "read"
+      ]
+    },
+    {
+      "id": "list-notes-nonexistent-tag",
+      "name": "list_notes › filter by unknown tag returns empty array",
+      "type": "tool-call",
+      "tool": "list_notes",
+      "input": {
+        "tag": "nonexistent-tag-xyz"
+      },
+      "expect": {
+        "success": true,
+        "contains": "[]"
+      },
+      "tags": [
+        "tool",
+        "read"
+      ]
+    },
+    {
+      "id": "create-note",
+      "name": "create_note › creates a new note — validates returned object shape",
+      "type": "tool-call",
+      "tool": "create_note",
+      "input": {
+        "title": "Test Note",
+        "content": "This note was created by CheckSpec",
+        "tags": [
+          "test",
+          "checkspec"
+        ]
+      },
+      "expect": {
+        "success": true,
+        "contains": "Test Note",
+        "schema": {
+          "type": "object",
+          "required": [
+            "id",
+            "title",
+            "content",
+            "tags",
+            "createdAt",
+            "updatedAt"
+          ],
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "content": {
+              "type": "string"
+            },
+            "tags": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "tags": [
+        "tool",
+        "write"
+      ]
+    },
+    {
+      "id": "list-notes-after-create",
+      "name": "list_notes › after create — Test Note appears in list (write → list round-trip)",
+      "type": "tool-call",
+      "tool": "list_notes",
+      "input": {},
+      "expect": {
+        "success": true,
+        "contains": "Test Note"
+      },
+      "tags": [
+        "tool",
+        "read",
+        "round-trip"
+      ]
+    },
+    {
+      "id": "update-note",
+      "name": "update_note › updates seeded note_demo_0002 title",
+      "type": "tool-call",
+      "tool": "update_note",
+      "input": {
+        "id": "note_demo_0002",
+        "title": "Q1 Meeting Notes (Updated)"
+      },
+      "expect": {
+        "success": true,
+        "contains": "Updated"
+      },
+      "tags": [
+        "tool",
+        "write"
+      ]
+    },
+    {
+      "id": "get-updated-note",
+      "name": "get_note › reads note_demo_0002 back — confirms title update (update → get round-trip)",
+      "type": "tool-call",
+      "tool": "get_note",
+      "input": {
+        "id": "note_demo_0002"
+      },
+      "expect": {
+        "success": true,
+        "contains": "Q1 Meeting Notes (Updated)"
+      },
+      "tags": [
+        "tool",
+        "read",
+        "round-trip"
+      ]
+    },
+    {
+      "id": "get-missing-note",
+      "name": "get_note › missing ID returns isError — generic message (no ID echo)",
+      "type": "tool-call",
+      "tool": "get_note",
+      "input": {
+        "id": "note_does_not_exist"
+      },
+      "expect": {
+        "success": false
+      },
+      "tags": [
+        "tool",
+        "error-handling"
+      ]
+    },
+    {
+      "id": "delete-note",
+      "name": "delete_note › deletes seeded note_demo_0001",
+      "type": "tool-call",
+      "tool": "delete_note",
+      "input": {
+        "id": "note_demo_0001"
+      },
+      "expect": {
+        "success": true
+      },
+      "tags": [
+        "tool",
+        "write"
+      ]
+    },
+    {
+      "id": "delete-missing-note",
+      "name": "delete_note › deleting already-deleted note returns isError (idempotency check)",
+      "type": "tool-call",
+      "tool": "delete_note",
+      "input": {
+        "id": "note_demo_0001"
+      },
+      "expect": {
+        "success": false
+      },
+      "tags": [
+        "tool",
+        "error-handling"
+      ]
+    },
+    {
+      "id": "resource-count",
+      "name": "notes://count › returns current note count as resource",
+      "type": "resource-read",
+      "uri": "notes://count",
+      "tags": [
+        "resource"
+      ]
+    },
+    {
+      "id": "resource-tags",
+      "name": "notes://tags › returns tag list with counts",
+      "type": "resource-read",
+      "uri": "notes://tags",
+      "tags": [
+        "resource"
+      ]
+    },
+    {
+      "id": "prompt-summarize",
+      "name": "summarize_notes › generates summary prompt (all notes)",
+      "type": "prompt-get",
+      "promptName": "summarize_notes",
+      "promptArgs": {},
+      "tags": [
+        "prompt"
+      ]
+    },
+    {
+      "id": "prompt-summarize-tagged",
+      "name": "summarize_notes › generates prompt filtered by tag",
+      "type": "prompt-get",
+      "promptName": "summarize_notes",
+      "promptArgs": {
+        "tag": "meeting"
+      },
+      "tags": [
+        "prompt"
+      ]
+    },
+    {
+      "id": "prompt-new-note",
+      "name": "new_note_from_topic › generates note creation prompt",
+      "type": "prompt-get",
+      "promptName": "new_note_from_topic",
+      "promptArgs": {
+        "topic": "TypeScript best practices",
+        "style": "bullet-points"
+      },
+      "tags": [
+        "prompt"
+      ]
+    },
+    {
+      "id": "security-create-note",
+      "name": "create_note › security scan — no user input echoed in errors (should pass)",
+      "type": "security",
+      "tool": "create_note",
+      "securityThreshold": "medium",
+      "tags": [
+        "security"
+      ]
+    },
+    {
+      "id": "security-get-note",
+      "name": "get_note › security scan — generic error message, no ID echo (should pass)",
+      "type": "security",
+      "tool": "get_note",
+      "securityThreshold": "medium",
+      "tags": [
+        "security"
+      ]
+    }
+  ]
+}

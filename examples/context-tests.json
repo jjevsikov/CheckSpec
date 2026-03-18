@@ -1,0 +1,83 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jjevsikov/CheckSpec/main/packages/core/checkspec.schema.json",
+  "version": "1.0",
+  "name": "Hook context variables demo",
+  "description": "Demonstrates capturing values from hook results and referencing them via {{varName}} in tests. The beforeAll hook creates a user and captures its id and name; the tests then use those variables without hard-coding the values.",
+  "server": {
+    "command": "node",
+    "args": [
+      "dist/index.js"
+    ],
+    "cwd": "demos/stateful-server"
+  },
+  "hooks": {
+    "beforeAll": [
+      {
+        "name": "seed: create context-test user",
+        "run": {
+          "type": "tool-call",
+          "tool": "create_user",
+          "input": {
+            "id": "ctx-alice",
+            "name": "Alice Context",
+            "email": "alice@ctx.test"
+          }
+        },
+        "capture": {
+          "userId": "$.user.id",
+          "userName": "$.user.name"
+        }
+      }
+    ],
+    "afterAll": [
+      {
+        "name": "teardown: wipe store",
+        "run": {
+          "type": "tool-call",
+          "tool": "reset_store",
+          "input": {}
+        }
+      }
+    ]
+  },
+  "tests": [
+    {
+      "id": "get-by-captured-id",
+      "name": "get_user › fetches the seeded user by captured id",
+      "type": "tool-call",
+      "tool": "get_user",
+      "input": {
+        "id": "{{userId}}"
+      },
+      "expect": {
+        "success": true,
+        "contains": "{{userName}}"
+      }
+    },
+    {
+      "id": "delete-by-captured-id",
+      "name": "delete_user › deletes the seeded user by captured id",
+      "type": "tool-call",
+      "tool": "delete_user",
+      "input": {
+        "id": "{{userId}}"
+      },
+      "expect": {
+        "success": true
+      }
+    },
+    {
+      "id": "get-after-delete",
+      "name": "get_user › returns error after deletion",
+      "type": "tool-call",
+      "tool": "get_user",
+      "input": {
+        "id": "{{userId}}"
+      },
+      "expect": {
+        "success": true,
+        "contains": "Not found"
+      }
+    }
+  ]
+}

@@ -1,0 +1,4035 @@
+{
+  "$ref": "#/$defs/CheckSpecCollection",
+  "$defs": {
+    "CheckSpecCollection": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "const": "1.0"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "server": {
+          "type": "object",
+          "properties": {
+            "command": {
+              "type": "string"
+            },
+            "args": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "env": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "cwd": {
+              "type": "string"
+            },
+            "url": {
+              "type": "string",
+              "format": "uri"
+            },
+            "transport": {
+              "type": "string",
+              "enum": [
+                "stdio",
+                "streamable-http",
+                "sse"
+              ]
+            },
+            "headers": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "hooks": {
+          "type": "object",
+          "properties": {
+            "beforeAll": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "run": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "const": "tool-call"
+                          },
+                          "tool": {
+                            "type": "string"
+                          },
+                          "input": {
+                            "type": "object",
+                            "additionalProperties": {}
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "tool",
+                          "input"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "const": "shell"
+                          },
+                          "command": {
+                            "type": "string"
+                          },
+                          "args": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "command"
+                        ],
+                        "additionalProperties": false
+                      }
+                    ]
+                  },
+                  "failFast": {
+                    "type": "boolean"
+                  },
+                  "timeoutMs": {
+                    "type": "number"
+                  },
+                  "capture": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [
+                  "name",
+                  "run"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "afterAll": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "run": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "const": "tool-call"
+                          },
+                          "tool": {
+                            "type": "string"
+                          },
+                          "input": {
+                            "type": "object",
+                            "additionalProperties": {}
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "tool",
+                          "input"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "const": "shell"
+                          },
+                          "command": {
+                            "type": "string"
+                          },
+                          "args": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "command"
+                        ],
+                        "additionalProperties": false
+                      }
+                    ]
+                  },
+                  "failFast": {
+                    "type": "boolean"
+                  },
+                  "timeoutMs": {
+                    "type": "number"
+                  },
+                  "capture": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [
+                  "name",
+                  "run"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "beforeEach": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "run": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "const": "tool-call"
+                          },
+                          "tool": {
+                            "type": "string"
+                          },
+                          "input": {
+                            "type": "object",
+                            "additionalProperties": {}
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "tool",
+                          "input"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "const": "shell"
+                          },
+                          "command": {
+                            "type": "string"
+                          },
+                          "args": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "command"
+                        ],
+                        "additionalProperties": false
+                      }
+                    ]
+                  },
+                  "failFast": {
+                    "type": "boolean"
+                  },
+                  "timeoutMs": {
+                    "type": "number"
+                  },
+                  "capture": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [
+                  "name",
+                  "run"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "afterEach": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "run": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "const": "tool-call"
+                          },
+                          "tool": {
+                            "type": "string"
+                          },
+                          "input": {
+                            "type": "object",
+                            "additionalProperties": {}
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "tool",
+                          "input"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "const": "shell"
+                          },
+                          "command": {
+                            "type": "string"
+                          },
+                          "args": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "command"
+                        ],
+                        "additionalProperties": false
+                      }
+                    ]
+                  },
+                  "failFast": {
+                    "type": "boolean"
+                  },
+                  "timeoutMs": {
+                    "type": "number"
+                  },
+                  "capture": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [
+                  "name",
+                  "run"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "describe": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "hooks": {
+                "type": "object",
+                "properties": {
+                  "beforeAll": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "run": {
+                          "anyOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "tool-call"
+                                },
+                                "tool": {
+                                  "type": "string"
+                                },
+                                "input": {
+                                  "type": "object",
+                                  "additionalProperties": {}
+                                }
+                              },
+                              "required": [
+                                "type",
+                                "tool",
+                                "input"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "shell"
+                                },
+                                "command": {
+                                  "type": "string"
+                                },
+                                "args": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string"
+                                  }
+                                }
+                              },
+                              "required": [
+                                "type",
+                                "command"
+                              ],
+                              "additionalProperties": false
+                            }
+                          ]
+                        },
+                        "failFast": {
+                          "type": "boolean"
+                        },
+                        "timeoutMs": {
+                          "type": "number"
+                        },
+                        "capture": {
+                          "type": "object",
+                          "additionalProperties": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "run"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "afterAll": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "run": {
+                          "anyOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "tool-call"
+                                },
+                                "tool": {
+                                  "type": "string"
+                                },
+                                "input": {
+                                  "type": "object",
+                                  "additionalProperties": {}
+                                }
+                              },
+                              "required": [
+                                "type",
+                                "tool",
+                                "input"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "shell"
+                                },
+                                "command": {
+                                  "type": "string"
+                                },
+                                "args": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string"
+                                  }
+                                }
+                              },
+                              "required": [
+                                "type",
+                                "command"
+                              ],
+                              "additionalProperties": false
+                            }
+                          ]
+                        },
+                        "failFast": {
+                          "type": "boolean"
+                        },
+                        "timeoutMs": {
+                          "type": "number"
+                        },
+                        "capture": {
+                          "type": "object",
+                          "additionalProperties": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "run"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "beforeEach": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "run": {
+                          "anyOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "tool-call"
+                                },
+                                "tool": {
+                                  "type": "string"
+                                },
+                                "input": {
+                                  "type": "object",
+                                  "additionalProperties": {}
+                                }
+                              },
+                              "required": [
+                                "type",
+                                "tool",
+                                "input"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "shell"
+                                },
+                                "command": {
+                                  "type": "string"
+                                },
+                                "args": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string"
+                                  }
+                                }
+                              },
+                              "required": [
+                                "type",
+                                "command"
+                              ],
+                              "additionalProperties": false
+                            }
+                          ]
+                        },
+                        "failFast": {
+                          "type": "boolean"
+                        },
+                        "timeoutMs": {
+                          "type": "number"
+                        },
+                        "capture": {
+                          "type": "object",
+                          "additionalProperties": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "run"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "afterEach": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "run": {
+                          "anyOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "tool-call"
+                                },
+                                "tool": {
+                                  "type": "string"
+                                },
+                                "input": {
+                                  "type": "object",
+                                  "additionalProperties": {}
+                                }
+                              },
+                              "required": [
+                                "type",
+                                "tool",
+                                "input"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "const": "shell"
+                                },
+                                "command": {
+                                  "type": "string"
+                                },
+                                "args": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string"
+                                  }
+                                }
+                              },
+                              "required": [
+                                "type",
+                                "command"
+                              ],
+                              "additionalProperties": false
+                            }
+                          ]
+                        },
+                        "failFast": {
+                          "type": "boolean"
+                        },
+                        "timeoutMs": {
+                          "type": "number"
+                        },
+                        "capture": {
+                          "type": "object",
+                          "additionalProperties": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "run"
+                      ],
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "additionalProperties": false
+              },
+              "tests": {
+                "type": "array",
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "tags": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "retry": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 5
+                        },
+                        "retryDelayMs": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "parametrize": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "label": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "input": {
+                                "type": "object",
+                                "additionalProperties": {}
+                              },
+                              "expect": {
+                                "type": "object",
+                                "properties": {
+                                  "success": {
+                                    "type": "boolean"
+                                  },
+                                  "schema": {
+                                    "type": "object",
+                                    "additionalProperties": {}
+                                  },
+                                  "contains": {
+                                    "type": "string"
+                                  },
+                                  "notContains": {
+                                    "type": "string"
+                                  },
+                                  "equals": {
+                                    "type": "string"
+                                  },
+                                  "matches": {
+                                    "type": "string"
+                                  },
+                                  "jsonPath": {
+                                    "anyOf": [
+                                      {
+                                        "type": "array",
+                                        "items": {
+                                          "type": "object",
+                                          "properties": {
+                                            "path": {
+                                              "type": "string"
+                                            },
+                                            "equals": {
+                                              "type": "string"
+                                            },
+                                            "contains": {
+                                              "type": "string"
+                                            },
+                                            "matches": {
+                                              "type": "string"
+                                            }
+                                          },
+                                          "required": [
+                                            "path"
+                                          ],
+                                          "additionalProperties": false
+                                        }
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "path": {
+                                            "type": "string"
+                                          },
+                                          "equals": {
+                                            "type": "string"
+                                          },
+                                          "contains": {
+                                            "type": "string"
+                                          },
+                                          "matches": {
+                                            "type": "string"
+                                          }
+                                        },
+                                        "required": [
+                                          "path"
+                                        ],
+                                        "additionalProperties": false
+                                      }
+                                    ]
+                                  },
+                                  "executionTimeMs": {
+                                    "type": "number"
+                                  },
+                                  "maxTokens": {
+                                    "type": "number"
+                                  }
+                                },
+                                "additionalProperties": false
+                              },
+                              "streamExpect": {
+                                "type": "object",
+                                "properties": {
+                                  "minChunks": {
+                                    "type": "number"
+                                  },
+                                  "chunkContains": {
+                                    "type": "string"
+                                  },
+                                  "maxChunkIntervalMs": {
+                                    "type": "number"
+                                  },
+                                  "finalContains": {
+                                    "type": "string"
+                                  },
+                                  "maxTotalMs": {
+                                    "type": "number"
+                                  }
+                                },
+                                "additionalProperties": false
+                              }
+                            },
+                            "required": [
+                              "label",
+                              "input"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "capture": {
+                          "type": "object",
+                          "additionalProperties": {
+                            "type": "string"
+                          }
+                        },
+                        "timeoutMs": {
+                          "type": "integer",
+                          "minimum": 100,
+                          "maximum": 300000
+                        },
+                        "type": {
+                          "type": "string",
+                          "const": "tool-call"
+                        },
+                        "tool": {
+                          "type": "string"
+                        },
+                        "input": {
+                          "type": "object",
+                          "additionalProperties": {}
+                        },
+                        "expect": {
+                          "type": "object",
+                          "properties": {
+                            "success": {
+                              "type": "boolean"
+                            },
+                            "schema": {
+                              "type": "object",
+                              "additionalProperties": {}
+                            },
+                            "contains": {
+                              "type": "string"
+                            },
+                            "notContains": {
+                              "type": "string"
+                            },
+                            "equals": {
+                              "type": "string"
+                            },
+                            "matches": {
+                              "type": "string"
+                            },
+                            "jsonPath": {
+                              "anyOf": [
+                                {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "path": {
+                                        "type": "string"
+                                      },
+                                      "equals": {
+                                        "type": "string"
+                                      },
+                                      "contains": {
+                                        "type": "string"
+                                      },
+                                      "matches": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "required": [
+                                      "path"
+                                    ],
+                                    "additionalProperties": false
+                                  }
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "path": {
+                                      "type": "string"
+                                    },
+                                    "equals": {
+                                      "type": "string"
+                                    },
+                                    "contains": {
+                                      "type": "string"
+                                    },
+                                    "matches": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "path"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              ]
+                            },
+                            "executionTimeMs": {
+                              "type": "number"
+                            },
+                            "maxTokens": {
+                              "type": "number"
+                            }
+                          },
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "type",
+                        "tool"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "tags": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "retry": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 5
+                        },
+                        "retryDelayMs": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "parametrize": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "label": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "input": {
+                                "type": "object",
+                                "additionalProperties": {}
+                              },
+                              "expect": {
+                                "type": "object",
+                                "properties": {
+                                  "success": {
+                                    "type": "boolean"
+                                  },
+                                  "schema": {
+                                    "type": "object",
+                                    "additionalProperties": {}
+                                  },
+                                  "contains": {
+                                    "type": "string"
+                                  },
+                                  "notContains": {
+                                    "type": "string"
+                                  },
+                                  "equals": {
+                                    "type": "string"
+                                  },
+                                  "matches": {
+                                    "type": "string"
+                                  },
+                                  "jsonPath": {
+                                    "anyOf": [
+                                      {
+                                        "type": "array",
+                                        "items": {
+                                          "type": "object",
+                                          "properties": {
+                                            "path": {
+                                              "type": "string"
+                                            },
+                                            "equals": {
+                                              "type": "string"
+                                            },
+                                            "contains": {
+                                              "type": "string"
+                                            },
+                                            "matches": {
+                                              "type": "string"
+                                            }
+                                          },
+                                          "required": [
+                                            "path"
+                                          ],
+                                          "additionalProperties": false
+                                        }
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "path": {
+                                            "type": "string"
+                                          },
+                                          "equals": {
+                                            "type": "string"
+                                          },
+                                          "contains": {
+                                            "type": "string"
+                                          },
+                                          "matches": {
+                                            "type": "string"
+                                          }
+                                        },
+                                        "required": [
+                                          "path"
+                                        ],
+                                        "additionalProperties": false
+                                      }
+                                    ]
+                                  },
+                                  "executionTimeMs": {
+                                    "type": "number"
+                                  },
+                                  "maxTokens": {
+                                    "type": "number"
+                                  }
+                                },
+                                "additionalProperties": false
+                              },
+                              "streamExpect": {
+                                "type": "object",
+                                "properties": {
+                                  "minChunks": {
+                                    "type": "number"
+                                  },
+                                  "chunkContains": {
+                                    "type": "string"
+                                  },
+                                  "maxChunkIntervalMs": {
+                                    "type": "number"
+                                  },
+                                  "finalContains": {
+                                    "type": "string"
+                                  },
+                                  "maxTotalMs": {
+                                    "type": "number"
+                                  }
+                                },
+                                "additionalProperties": false
+                              }
+                            },
+                            "required": [
+                              "label",
+                              "input"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "capture": {
+                          "type": "object",
+                          "additionalProperties": {
+                            "type": "string"
+                          }
+                        },
+                        "timeoutMs": {
+                          "type": "integer",
+                          "minimum": 100,
+                          "maximum": 300000
+                        },
+                        "type": {
+                          "type": "string",
+                          "const": "protocol"
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "type"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "tags": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "retry": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 5
+                        },
+                        "retryDelayMs": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "parametrize": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "label": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "input": {
+                                "type": "object",
+                                "additionalProperties": {}
+                              },
+                              "expect": {
+                                "type": "object",
+                                "properties": {
+                                  "success": {
+                                    "type": "boolean"
+                                  },
+                                  "schema": {
+                                    "type": "object",
+                                    "additionalProperties": {}
+                                  },
+                                  "contains": {
+                                    "type": "string"
+                                  },
+                                  "notContains": {
+                                    "type": "string"
+                                  },
+                                  "equals": {
+                                    "type": "string"
+                                  },
+                                  "matches": {
+                                    "type": "string"
+                                  },
+                                  "jsonPath": {
+                                    "anyOf": [
+                                      {
+                                        "type": "array",
+                                        "items": {
+                                          "type": "object",
+                                          "properties": {
+                                            "path": {
+                                              "type": "string"
+                                            },
+                                            "equals": {
+                                              "type": "string"
+                                            },
+                                            "contains": {
+                                              "type": "string"
+                                            },
+                                            "matches": {
+                                              "type": "string"
+                                            }
+                                          },
+                                          "required": [
+                                            "path"
+                                          ],
+                                          "additionalProperties": false
+                                        }
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "path": {
+                                            "type": "string"
+                                          },
+                                          "equals": {
+                                            "type": "string"
+                                          },
+                                          "contains": {
+                                            "type": "string"
+                                          },
+                                          "matches": {
+                                            "type": "string"
+                                          }
+                                        },
+                                        "required": [
+                                          "path"
+                                        ],
+                                        "additionalProperties": false
+                                      }
+                                    ]
+                                  },
+                                  "executionTimeMs": {
+                                    "type": "number"
+                                  },
+                                  "maxTokens": {
+                                    "type": "number"
+                                  }
+                                },
+                                "additionalProperties": false
+                              },
+                              "streamExpect": {
+                                "type": "object",
+                                "properties": {
+                                  "minChunks": {
+                                    "type": "number"
+                                  },
+                                  "chunkContains": {
+                                    "type": "string"
+                                  },
+                                  "maxChunkIntervalMs": {
+                                    "type": "number"
+                                  },
+                                  "finalContains": {
+                                    "type": "string"
+                                  },
+                                  "maxTotalMs": {
+                                    "type": "number"
+                                  }
+                                },
+                                "additionalProperties": false
+                              }
+                            },
+                            "required": [
+                              "label",
+                              "input"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "capture": {
+                          "type": "object",
+                          "additionalProperties": {
+                            "type": "string"
+                          }
+                        },
+                        "timeoutMs": {
+                          "type": "integer",
+                          "minimum": 100,
+                          "maximum": 300000
+                        },
+                        "type": {
+                          "type": "string",
+                          "const": "security"
+                        },
+                        "tool": {
+                          "type": "string"
+                        },
+                        "securityThreshold": {
+                          "type": "string",
+                          "enum": [
+                            "critical",
+                            "high",
+                            "medium",
+                            "low",
+                            "info"
+                          ]
+                        },
+                        "expect": {
+                          "type": "object",
+                          "properties": {
+                            "success": {
+                              "type": "boolean"
+                            },
+                            "schema": {
+                              "type": "object",
+                              "additionalProperties": {}
+                            },
+                            "contains": {
+                              "type": "string"
+                            },
+                            "notContains": {
+                              "type": "string"
+                            },
+                            "equals": {
+                              "type": "string"
+                            },
+                            "matches": {
+                              "type": "string"
+                            },
+                            "jsonPath": {
+                              "anyOf": [
+                                {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "path": {
+                                        "type": "string"
+                                      },
+                                      "equals": {
+                                        "type": "string"
+                                      },
+                                      "contains": {
+                                        "type": "string"
+                                      },
+                                      "matches": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "required": [
+                                      "path"
+                                    ],
+                                    "additionalProperties": false
+                                  }
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "path": {
+                                      "type": "string"
+                                    },
+                                    "equals": {
+                                      "type": "string"
+                                    },
+                                    "contains": {
+                                      "type": "string"
+                                    },
+                                    "matches": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "path"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              ]
+                            },
+                            "executionTimeMs": {
+                              "type": "number"
+                            },
+                            "maxTokens": {
+                              "type": "number"
+                            }
+                          },
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "type"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "tags": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "retry": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 5
+                        },
+                        "retryDelayMs": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "parametrize": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "label": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "input": {
+                                "type": "object",
+                                "additionalProperties": {}
+                              },
+                              "expect": {
+                                "type": "object",
+                                "properties": {
+                                  "success": {
+                                    "type": "boolean"
+                                  },
+                                  "schema": {
+                                    "type": "object",
+                                    "additionalProperties": {}
+                                  },
+                                  "contains": {
+                                    "type": "string"
+                                  },
+                                  "notContains": {
+                                    "type": "string"
+                                  },
+                                  "equals": {
+                                    "type": "string"
+                                  },
+                                  "matches": {
+                                    "type": "string"
+                                  },
+                                  "jsonPath": {
+                                    "anyOf": [
+                                      {
+                                        "type": "array",
+                                        "items": {
+                                          "type": "object",
+                                          "properties": {
+                                            "path": {
+                                              "type": "string"
+                                            },
+                                            "equals": {
+                                              "type": "string"
+                                            },
+                                            "contains": {
+                                              "type": "string"
+                                            },
+                                            "matches": {
+                                              "type": "string"
+                                            }
+                                          },
+                                          "required": [
+                                            "path"
+                                          ],
+                                          "additionalProperties": false
+                                        }
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "path": {
+                                            "type": "string"
+                                          },
+                                          "equals": {
+                                            "type": "string"
+                                          },
+                                          "contains": {
+                                            "type": "string"
+                                          },
+                                          "matches": {
+                                            "type": "string"
+                                          }
+                                        },
+                                        "required": [
+                                          "path"
+                                        ],
+                                        "additionalProperties": false
+                                      }
+                                    ]
+                                  },
+                                  "executionTimeMs": {
+                                    "type": "number"
+                                  },
+                                  "maxTokens": {
+                                    "type": "number"
+                                  }
+                                },
+                                "additionalProperties": false
+                              },
+                              "streamExpect": {
+                                "type": "object",
+                                "properties": {
+                                  "minChunks": {
+                                    "type": "number"
+                                  },
+                                  "chunkContains": {
+                                    "type": "string"
+                                  },
+                                  "maxChunkIntervalMs": {
+                                    "type": "number"
+                                  },
+                                  "finalContains": {
+                                    "type": "string"
+                                  },
+                                  "maxTotalMs": {
+                                    "type": "number"
+                                  }
+                                },
+                                "additionalProperties": false
+                              }
+                            },
+                            "required": [
+                              "label",
+                              "input"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "capture": {
+                          "type": "object",
+                          "additionalProperties": {
+                            "type": "string"
+                          }
+                        },
+                        "timeoutMs": {
+                          "type": "integer",
+                          "minimum": 100,
+                          "maximum": 300000
+                        },
+                        "type": {
+                          "type": "string",
+                          "const": "fuzz"
+                        },
+                        "tool": {
+                          "type": "string"
+                        },
+                        "input": {
+                          "type": "object",
+                          "additionalProperties": {}
+                        },
+                        "expect": {
+                          "type": "object",
+                          "properties": {
+                            "success": {
+                              "type": "boolean"
+                            },
+                            "schema": {
+                              "type": "object",
+                              "additionalProperties": {}
+                            },
+                            "contains": {
+                              "type": "string"
+                            },
+                            "notContains": {
+                              "type": "string"
+                            },
+                            "equals": {
+                              "type": "string"
+                            },
+                            "matches": {
+                              "type": "string"
+                            },
+                            "jsonPath": {
+                              "anyOf": [
+                                {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "path": {
+                                        "type": "string"
+                                      },
+                                      "equals": {
+                                        "type": "string"
+                                      },
+                                      "contains": {
+                                        "type": "string"
+                                      },
+                                      "matches": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "required": [
+                                      "path"
+                                    ],
+                                    "additionalProperties": false
+                                  }
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "path": {
+                                      "type": "string"
+                                    },
+                                    "equals": {
+                                      "type": "string"
+                                    },
+                                    "contains": {
+                                      "type": "string"
+                                    },
+                                    "matches": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "path"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              ]
+                            },
+                            "executionTimeMs": {
+                              "type": "number"
+                            },
+                            "maxTokens": {
+                              "type": "number"
+                            }
+                          },
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "type"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "tags": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "retry": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 5
+                        },
+                        "retryDelayMs": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "parametrize": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "label": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "input": {
+                                "type": "object",
+                                "additionalProperties": {}
+                              },
+                              "expect": {
+                                "type": "object",
+                                "properties": {
+                                  "success": {
+                                    "type": "boolean"
+                                  },
+                                  "schema": {
+                                    "type": "object",
+                                    "additionalProperties": {}
+                                  },
+                                  "contains": {
+                                    "type": "string"
+                                  },
+                                  "notContains": {
+                                    "type": "string"
+                                  },
+                                  "equals": {
+                                    "type": "string"
+                                  },
+                                  "matches": {
+                                    "type": "string"
+                                  },
+                                  "jsonPath": {
+                                    "anyOf": [
+                                      {
+                                        "type": "array",
+                                        "items": {
+                                          "type": "object",
+                                          "properties": {
+                                            "path": {
+                                              "type": "string"
+                                            },
+                                            "equals": {
+                                              "type": "string"
+                                            },
+                                            "contains": {
+                                              "type": "string"
+                                            },
+                                            "matches": {
+                                              "type": "string"
+                                            }
+                                          },
+                                          "required": [
+                                            "path"
+                                          ],
+                                          "additionalProperties": false
+                                        }
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "path": {
+                                            "type": "string"
+                                          },
+                                          "equals": {
+                                            "type": "string"
+                                          },
+                                          "contains": {
+                                            "type": "string"
+                                          },
+                                          "matches": {
+                                            "type": "string"
+                                          }
+                                        },
+                                        "required": [
+                                          "path"
+                                        ],
+                                        "additionalProperties": false
+                                      }
+                                    ]
+                                  },
+                                  "executionTimeMs": {
+                                    "type": "number"
+                                  },
+                                  "maxTokens": {
+                                    "type": "number"
+                                  }
+                                },
+                                "additionalProperties": false
+                              },
+                              "streamExpect": {
+                                "type": "object",
+                                "properties": {
+                                  "minChunks": {
+                                    "type": "number"
+                                  },
+                                  "chunkContains": {
+                                    "type": "string"
+                                  },
+                                  "maxChunkIntervalMs": {
+                                    "type": "number"
+                                  },
+                                  "finalContains": {
+                                    "type": "string"
+                                  },
+                                  "maxTotalMs": {
+                                    "type": "number"
+                                  }
+                                },
+                                "additionalProperties": false
+                              }
+                            },
+                            "required": [
+                              "label",
+                              "input"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "capture": {
+                          "type": "object",
+                          "additionalProperties": {
+                            "type": "string"
+                          }
+                        },
+                        "timeoutMs": {
+                          "type": "integer",
+                          "minimum": 100,
+                          "maximum": 300000
+                        },
+                        "type": {
+                          "type": "string",
+                          "const": "resource-read"
+                        },
+                        "uri": {
+                          "type": "string"
+                        },
+                        "expect": {
+                          "type": "object",
+                          "properties": {
+                            "success": {
+                              "type": "boolean"
+                            },
+                            "schema": {
+                              "type": "object",
+                              "additionalProperties": {}
+                            },
+                            "contains": {
+                              "type": "string"
+                            },
+                            "notContains": {
+                              "type": "string"
+                            },
+                            "equals": {
+                              "type": "string"
+                            },
+                            "matches": {
+                              "type": "string"
+                            },
+                            "jsonPath": {
+                              "anyOf": [
+                                {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "path": {
+                                        "type": "string"
+                                      },
+                                      "equals": {
+                                        "type": "string"
+                                      },
+                                      "contains": {
+                                        "type": "string"
+                                      },
+                                      "matches": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "required": [
+                                      "path"
+                                    ],
+                                    "additionalProperties": false
+                                  }
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "path": {
+                                      "type": "string"
+                                    },
+                                    "equals": {
+                                      "type": "string"
+                                    },
+                                    "contains": {
+                                      "type": "string"
+                                    },
+                                    "matches": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "path"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              ]
+                            },
+                            "executionTimeMs": {
+                              "type": "number"
+                            },
+                            "maxTokens": {
+                              "type": "number"
+                            }
+                          },
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "type",
+                        "uri"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "tags": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "retry": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 5
+                        },
+                        "retryDelayMs": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "parametrize": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "label": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "input": {
+                                "type": "object",
+                                "additionalProperties": {}
+                              },
+                              "expect": {
+                                "type": "object",
+                                "properties": {
+                                  "success": {
+                                    "type": "boolean"
+                                  },
+                                  "schema": {
+                                    "type": "object",
+                                    "additionalProperties": {}
+                                  },
+                                  "contains": {
+                                    "type": "string"
+                                  },
+                                  "notContains": {
+                                    "type": "string"
+                                  },
+                                  "equals": {
+                                    "type": "string"
+                                  },
+                                  "matches": {
+                                    "type": "string"
+                                  },
+                                  "jsonPath": {
+                                    "anyOf": [
+                                      {
+                                        "type": "array",
+                                        "items": {
+                                          "type": "object",
+                                          "properties": {
+                                            "path": {
+                                              "type": "string"
+                                            },
+                                            "equals": {
+                                              "type": "string"
+                                            },
+                                            "contains": {
+                                              "type": "string"
+                                            },
+                                            "matches": {
+                                              "type": "string"
+                                            }
+                                          },
+                                          "required": [
+                                            "path"
+                                          ],
+                                          "additionalProperties": false
+                                        }
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "path": {
+                                            "type": "string"
+                                          },
+                                          "equals": {
+                                            "type": "string"
+                                          },
+                                          "contains": {
+                                            "type": "string"
+                                          },
+                                          "matches": {
+                                            "type": "string"
+                                          }
+                                        },
+                                        "required": [
+                                          "path"
+                                        ],
+                                        "additionalProperties": false
+                                      }
+                                    ]
+                                  },
+                                  "executionTimeMs": {
+                                    "type": "number"
+                                  },
+                                  "maxTokens": {
+                                    "type": "number"
+                                  }
+                                },
+                                "additionalProperties": false
+                              },
+                              "streamExpect": {
+                                "type": "object",
+                                "properties": {
+                                  "minChunks": {
+                                    "type": "number"
+                                  },
+                                  "chunkContains": {
+                                    "type": "string"
+                                  },
+                                  "maxChunkIntervalMs": {
+                                    "type": "number"
+                                  },
+                                  "finalContains": {
+                                    "type": "string"
+                                  },
+                                  "maxTotalMs": {
+                                    "type": "number"
+                                  }
+                                },
+                                "additionalProperties": false
+                              }
+                            },
+                            "required": [
+                              "label",
+                              "input"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "capture": {
+                          "type": "object",
+                          "additionalProperties": {
+                            "type": "string"
+                          }
+                        },
+                        "timeoutMs": {
+                          "type": "integer",
+                          "minimum": 100,
+                          "maximum": 300000
+                        },
+                        "type": {
+                          "type": "string",
+                          "const": "prompt-get"
+                        },
+                        "promptName": {
+                          "type": "string"
+                        },
+                        "tool": {
+                          "type": "string"
+                        },
+                        "promptArgs": {
+                          "type": "object",
+                          "additionalProperties": {
+                            "type": "string"
+                          }
+                        },
+                        "expect": {
+                          "type": "object",
+                          "properties": {
+                            "success": {
+                              "type": "boolean"
+                            },
+                            "schema": {
+                              "type": "object",
+                              "additionalProperties": {}
+                            },
+                            "contains": {
+                              "type": "string"
+                            },
+                            "notContains": {
+                              "type": "string"
+                            },
+                            "equals": {
+                              "type": "string"
+                            },
+                            "matches": {
+                              "type": "string"
+                            },
+                            "jsonPath": {
+                              "anyOf": [
+                                {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "path": {
+                                        "type": "string"
+                                      },
+                                      "equals": {
+                                        "type": "string"
+                                      },
+                                      "contains": {
+                                        "type": "string"
+                                      },
+                                      "matches": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "required": [
+                                      "path"
+                                    ],
+                                    "additionalProperties": false
+                                  }
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "path": {
+                                      "type": "string"
+                                    },
+                                    "equals": {
+                                      "type": "string"
+                                    },
+                                    "contains": {
+                                      "type": "string"
+                                    },
+                                    "matches": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "path"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              ]
+                            },
+                            "executionTimeMs": {
+                              "type": "number"
+                            },
+                            "maxTokens": {
+                              "type": "number"
+                            }
+                          },
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "type"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "tags": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "retry": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 5
+                        },
+                        "retryDelayMs": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "parametrize": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "label": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "input": {
+                                "type": "object",
+                                "additionalProperties": {}
+                              },
+                              "expect": {
+                                "type": "object",
+                                "properties": {
+                                  "success": {
+                                    "type": "boolean"
+                                  },
+                                  "schema": {
+                                    "type": "object",
+                                    "additionalProperties": {}
+                                  },
+                                  "contains": {
+                                    "type": "string"
+                                  },
+                                  "notContains": {
+                                    "type": "string"
+                                  },
+                                  "equals": {
+                                    "type": "string"
+                                  },
+                                  "matches": {
+                                    "type": "string"
+                                  },
+                                  "jsonPath": {
+                                    "anyOf": [
+                                      {
+                                        "type": "array",
+                                        "items": {
+                                          "type": "object",
+                                          "properties": {
+                                            "path": {
+                                              "type": "string"
+                                            },
+                                            "equals": {
+                                              "type": "string"
+                                            },
+                                            "contains": {
+                                              "type": "string"
+                                            },
+                                            "matches": {
+                                              "type": "string"
+                                            }
+                                          },
+                                          "required": [
+                                            "path"
+                                          ],
+                                          "additionalProperties": false
+                                        }
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "path": {
+                                            "type": "string"
+                                          },
+                                          "equals": {
+                                            "type": "string"
+                                          },
+                                          "contains": {
+                                            "type": "string"
+                                          },
+                                          "matches": {
+                                            "type": "string"
+                                          }
+                                        },
+                                        "required": [
+                                          "path"
+                                        ],
+                                        "additionalProperties": false
+                                      }
+                                    ]
+                                  },
+                                  "executionTimeMs": {
+                                    "type": "number"
+                                  },
+                                  "maxTokens": {
+                                    "type": "number"
+                                  }
+                                },
+                                "additionalProperties": false
+                              },
+                              "streamExpect": {
+                                "type": "object",
+                                "properties": {
+                                  "minChunks": {
+                                    "type": "number"
+                                  },
+                                  "chunkContains": {
+                                    "type": "string"
+                                  },
+                                  "maxChunkIntervalMs": {
+                                    "type": "number"
+                                  },
+                                  "finalContains": {
+                                    "type": "string"
+                                  },
+                                  "maxTotalMs": {
+                                    "type": "number"
+                                  }
+                                },
+                                "additionalProperties": false
+                              }
+                            },
+                            "required": [
+                              "label",
+                              "input"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "capture": {
+                          "type": "object",
+                          "additionalProperties": {
+                            "type": "string"
+                          }
+                        },
+                        "timeoutMs": {
+                          "type": "integer",
+                          "minimum": 100,
+                          "maximum": 300000
+                        },
+                        "type": {
+                          "type": "string",
+                          "const": "streaming-tool-call"
+                        },
+                        "tool": {
+                          "type": "string"
+                        },
+                        "input": {
+                          "type": "object",
+                          "additionalProperties": {}
+                        },
+                        "streamExpect": {
+                          "type": "object",
+                          "properties": {
+                            "minChunks": {
+                              "type": "number"
+                            },
+                            "chunkContains": {
+                              "type": "string"
+                            },
+                            "maxChunkIntervalMs": {
+                              "type": "number"
+                            },
+                            "finalContains": {
+                              "type": "string"
+                            },
+                            "maxTotalMs": {
+                              "type": "number"
+                            }
+                          },
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "type",
+                        "tool",
+                        "input",
+                        "streamExpect"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
+                }
+              }
+            },
+            "required": [
+              "name",
+              "tests"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "tests": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "tags": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "retry": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 5
+                  },
+                  "retryDelayMs": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "parametrize": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "label": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "input": {
+                          "type": "object",
+                          "additionalProperties": {}
+                        },
+                        "expect": {
+                          "type": "object",
+                          "properties": {
+                            "success": {
+                              "type": "boolean"
+                            },
+                            "schema": {
+                              "type": "object",
+                              "additionalProperties": {}
+                            },
+                            "contains": {
+                              "type": "string"
+                            },
+                            "notContains": {
+                              "type": "string"
+                            },
+                            "equals": {
+                              "type": "string"
+                            },
+                            "matches": {
+                              "type": "string"
+                            },
+                            "jsonPath": {
+                              "anyOf": [
+                                {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "path": {
+                                        "type": "string"
+                                      },
+                                      "equals": {
+                                        "type": "string"
+                                      },
+                                      "contains": {
+                                        "type": "string"
+                                      },
+                                      "matches": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "required": [
+                                      "path"
+                                    ],
+                                    "additionalProperties": false
+                                  }
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "path": {
+                                      "type": "string"
+                                    },
+                                    "equals": {
+                                      "type": "string"
+                                    },
+                                    "contains": {
+                                      "type": "string"
+                                    },
+                                    "matches": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "path"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              ]
+                            },
+                            "executionTimeMs": {
+                              "type": "number"
+                            },
+                            "maxTokens": {
+                              "type": "number"
+                            }
+                          },
+                          "additionalProperties": false
+                        },
+                        "streamExpect": {
+                          "type": "object",
+                          "properties": {
+                            "minChunks": {
+                              "type": "number"
+                            },
+                            "chunkContains": {
+                              "type": "string"
+                            },
+                            "maxChunkIntervalMs": {
+                              "type": "number"
+                            },
+                            "finalContains": {
+                              "type": "string"
+                            },
+                            "maxTotalMs": {
+                              "type": "number"
+                            }
+                          },
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "label",
+                        "input"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "capture": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "string"
+                    }
+                  },
+                  "timeoutMs": {
+                    "type": "integer",
+                    "minimum": 100,
+                    "maximum": 300000
+                  },
+                  "type": {
+                    "type": "string",
+                    "const": "tool-call"
+                  },
+                  "tool": {
+                    "type": "string"
+                  },
+                  "input": {
+                    "type": "object",
+                    "additionalProperties": {}
+                  },
+                  "expect": {
+                    "type": "object",
+                    "properties": {
+                      "success": {
+                        "type": "boolean"
+                      },
+                      "schema": {
+                        "type": "object",
+                        "additionalProperties": {}
+                      },
+                      "contains": {
+                        "type": "string"
+                      },
+                      "notContains": {
+                        "type": "string"
+                      },
+                      "equals": {
+                        "type": "string"
+                      },
+                      "matches": {
+                        "type": "string"
+                      },
+                      "jsonPath": {
+                        "anyOf": [
+                          {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "path": {
+                                  "type": "string"
+                                },
+                                "equals": {
+                                  "type": "string"
+                                },
+                                "contains": {
+                                  "type": "string"
+                                },
+                                "matches": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "path"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "path": {
+                                "type": "string"
+                              },
+                              "equals": {
+                                "type": "string"
+                              },
+                              "contains": {
+                                "type": "string"
+                              },
+                              "matches": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "path"
+                            ],
+                            "additionalProperties": false
+                          }
+                        ]
+                      },
+                      "executionTimeMs": {
+                        "type": "number"
+                      },
+                      "maxTokens": {
+                        "type": "number"
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "name",
+                  "type",
+                  "tool"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "tags": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "retry": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 5
+                  },
+                  "retryDelayMs": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "parametrize": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "label": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "input": {
+                          "type": "object",
+                          "additionalProperties": {}
+                        },
+                        "expect": {
+                          "type": "object",
+                          "properties": {
+                            "success": {
+                              "type": "boolean"
+                            },
+                            "schema": {
+                              "type": "object",
+                              "additionalProperties": {}
+                            },
+                            "contains": {
+                              "type": "string"
+                            },
+                            "notContains": {
+                              "type": "string"
+                            },
+                            "equals": {
+                              "type": "string"
+                            },
+                            "matches": {
+                              "type": "string"
+                            },
+                            "jsonPath": {
+                              "anyOf": [
+                                {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "path": {
+                                        "type": "string"
+                                      },
+                                      "equals": {
+                                        "type": "string"
+                                      },
+                                      "contains": {
+                                        "type": "string"
+                                      },
+                                      "matches": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "required": [
+                                      "path"
+                                    ],
+                                    "additionalProperties": false
+                                  }
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "path": {
+                                      "type": "string"
+                                    },
+                                    "equals": {
+                                      "type": "string"
+                                    },
+                                    "contains": {
+                                      "type": "string"
+                                    },
+                                    "matches": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "path"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              ]
+                            },
+                            "executionTimeMs": {
+                              "type": "number"
+                            },
+                            "maxTokens": {
+                              "type": "number"
+                            }
+                          },
+                          "additionalProperties": false
+                        },
+                        "streamExpect": {
+                          "type": "object",
+                          "properties": {
+                            "minChunks": {
+                              "type": "number"
+                            },
+                            "chunkContains": {
+                              "type": "string"
+                            },
+                            "maxChunkIntervalMs": {
+                              "type": "number"
+                            },
+                            "finalContains": {
+                              "type": "string"
+                            },
+                            "maxTotalMs": {
+                              "type": "number"
+                            }
+                          },
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "label",
+                        "input"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "capture": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "string"
+                    }
+                  },
+                  "timeoutMs": {
+                    "type": "integer",
+                    "minimum": 100,
+                    "maximum": 300000
+                  },
+                  "type": {
+                    "type": "string",
+                    "const": "protocol"
+                  }
+                },
+                "required": [
+                  "name",
+                  "type"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "tags": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "retry": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 5
+                  },
+                  "retryDelayMs": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "parametrize": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "label": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "input": {
+                          "type": "object",
+                          "additionalProperties": {}
+                        },
+                        "expect": {
+                          "type": "object",
+                          "properties": {
+                            "success": {
+                              "type": "boolean"
+                            },
+                            "schema": {
+                              "type": "object",
+                              "additionalProperties": {}
+                            },
+                            "contains": {
+                              "type": "string"
+                            },
+                            "notContains": {
+                              "type": "string"
+                            },
+                            "equals": {
+                              "type": "string"
+                            },
+                            "matches": {
+                              "type": "string"
+                            },
+                            "jsonPath": {
+                              "anyOf": [
+                                {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "path": {
+                                        "type": "string"
+                                      },
+                                      "equals": {
+                                        "type": "string"
+                                      },
+                                      "contains": {
+                                        "type": "string"
+                                      },
+                                      "matches": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "required": [
+                                      "path"
+                                    ],
+                                    "additionalProperties": false
+                                  }
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "path": {
+                                      "type": "string"
+                                    },
+                                    "equals": {
+                                      "type": "string"
+                                    },
+                                    "contains": {
+                                      "type": "string"
+                                    },
+                                    "matches": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "path"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              ]
+                            },
+                            "executionTimeMs": {
+                              "type": "number"
+                            },
+                            "maxTokens": {
+                              "type": "number"
+                            }
+                          },
+                          "additionalProperties": false
+                        },
+                        "streamExpect": {
+                          "type": "object",
+                          "properties": {
+                            "minChunks": {
+                              "type": "number"
+                            },
+                            "chunkContains": {
+                              "type": "string"
+                            },
+                            "maxChunkIntervalMs": {
+                              "type": "number"
+                            },
+                            "finalContains": {
+                              "type": "string"
+                            },
+                            "maxTotalMs": {
+                              "type": "number"
+                            }
+                          },
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "label",
+                        "input"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "capture": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "string"
+                    }
+                  },
+                  "timeoutMs": {
+                    "type": "integer",
+                    "minimum": 100,
+                    "maximum": 300000
+                  },
+                  "type": {
+                    "type": "string",
+                    "const": "security"
+                  },
+                  "tool": {
+                    "type": "string"
+                  },
+                  "securityThreshold": {
+                    "type": "string",
+                    "enum": [
+                      "critical",
+                      "high",
+                      "medium",
+                      "low",
+                      "info"
+                    ]
+                  },
+                  "expect": {
+                    "type": "object",
+                    "properties": {
+                      "success": {
+                        "type": "boolean"
+                      },
+                      "schema": {
+                        "type": "object",
+                        "additionalProperties": {}
+                      },
+                      "contains": {
+                        "type": "string"
+                      },
+                      "notContains": {
+                        "type": "string"
+                      },
+                      "equals": {
+                        "type": "string"
+                      },
+                      "matches": {
+                        "type": "string"
+                      },
+                      "jsonPath": {
+                        "anyOf": [
+                          {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "path": {
+                                  "type": "string"
+                                },
+                                "equals": {
+                                  "type": "string"
+                                },
+                                "contains": {
+                                  "type": "string"
+                                },
+                                "matches": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "path"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "path": {
+                                "type": "string"
+                              },
+                              "equals": {
+                                "type": "string"
+                              },
+                              "contains": {
+                                "type": "string"
+                              },
+                              "matches": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "path"
+                            ],
+                            "additionalProperties": false
+                          }
+                        ]
+                      },
+                      "executionTimeMs": {
+                        "type": "number"
+                      },
+                      "maxTokens": {
+                        "type": "number"
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "name",
+                  "type"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "tags": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "retry": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 5
+                  },
+                  "retryDelayMs": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "parametrize": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "label": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "input": {
+                          "type": "object",
+                          "additionalProperties": {}
+                        },
+                        "expect": {
+                          "type": "object",
+                          "properties": {
+                            "success": {
+                              "type": "boolean"
+                            },
+                            "schema": {
+                              "type": "object",
+                              "additionalProperties": {}
+                            },
+                            "contains": {
+                              "type": "string"
+                            },
+                            "notContains": {
+                              "type": "string"
+                            },
+                            "equals": {
+                              "type": "string"
+                            },
+                            "matches": {
+                              "type": "string"
+                            },
+                            "jsonPath": {
+                              "anyOf": [
+                                {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "path": {
+                                        "type": "string"
+                                      },
+                                      "equals": {
+                                        "type": "string"
+                                      },
+                                      "contains": {
+                                        "type": "string"
+                                      },
+                                      "matches": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "required": [
+                                      "path"
+                                    ],
+                                    "additionalProperties": false
+                                  }
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "path": {
+                                      "type": "string"
+                                    },
+                                    "equals": {
+                                      "type": "string"
+                                    },
+                                    "contains": {
+                                      "type": "string"
+                                    },
+                                    "matches": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "path"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              ]
+                            },
+                            "executionTimeMs": {
+                              "type": "number"
+                            },
+                            "maxTokens": {
+                              "type": "number"
+                            }
+                          },
+                          "additionalProperties": false
+                        },
+                        "streamExpect": {
+                          "type": "object",
+                          "properties": {
+                            "minChunks": {
+                              "type": "number"
+                            },
+                            "chunkContains": {
+                              "type": "string"
+                            },
+                            "maxChunkIntervalMs": {
+                              "type": "number"
+                            },
+                            "finalContains": {
+                              "type": "string"
+                            },
+                            "maxTotalMs": {
+                              "type": "number"
+                            }
+                          },
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "label",
+                        "input"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "capture": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "string"
+                    }
+                  },
+                  "timeoutMs": {
+                    "type": "integer",
+                    "minimum": 100,
+                    "maximum": 300000
+                  },
+                  "type": {
+                    "type": "string",
+                    "const": "fuzz"
+                  },
+                  "tool": {
+                    "type": "string"
+                  },
+                  "input": {
+                    "type": "object",
+                    "additionalProperties": {}
+                  },
+                  "expect": {
+                    "type": "object",
+                    "properties": {
+                      "success": {
+                        "type": "boolean"
+                      },
+                      "schema": {
+                        "type": "object",
+                        "additionalProperties": {}
+                      },
+                      "contains": {
+                        "type": "string"
+                      },
+                      "notContains": {
+                        "type": "string"
+                      },
+                      "equals": {
+                        "type": "string"
+                      },
+                      "matches": {
+                        "type": "string"
+                      },
+                      "jsonPath": {
+                        "anyOf": [
+                          {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "path": {
+                                  "type": "string"
+                                },
+                                "equals": {
+                                  "type": "string"
+                                },
+                                "contains": {
+                                  "type": "string"
+                                },
+                                "matches": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "path"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "path": {
+                                "type": "string"
+                              },
+                              "equals": {
+                                "type": "string"
+                              },
+                              "contains": {
+                                "type": "string"
+                              },
+                              "matches": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "path"
+                            ],
+                            "additionalProperties": false
+                          }
+                        ]
+                      },
+                      "executionTimeMs": {
+                        "type": "number"
+                      },
+                      "maxTokens": {
+                        "type": "number"
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "name",
+                  "type"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "tags": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "retry": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 5
+                  },
+                  "retryDelayMs": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "parametrize": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "label": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "input": {
+                          "type": "object",
+                          "additionalProperties": {}
+                        },
+                        "expect": {
+                          "type": "object",
+                          "properties": {
+                            "success": {
+                              "type": "boolean"
+                            },
+                            "schema": {
+                              "type": "object",
+                              "additionalProperties": {}
+                            },
+                            "contains": {
+                              "type": "string"
+                            },
+                            "notContains": {
+                              "type": "string"
+                            },
+                            "equals": {
+                              "type": "string"
+                            },
+                            "matches": {
+                              "type": "string"
+                            },
+                            "jsonPath": {
+                              "anyOf": [
+                                {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "path": {
+                                        "type": "string"
+                                      },
+                                      "equals": {
+                                        "type": "string"
+                                      },
+                                      "contains": {
+                                        "type": "string"
+                                      },
+                                      "matches": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "required": [
+                                      "path"
+                                    ],
+                                    "additionalProperties": false
+                                  }
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "path": {
+                                      "type": "string"
+                                    },
+                                    "equals": {
+                                      "type": "string"
+                                    },
+                                    "contains": {
+                                      "type": "string"
+                                    },
+                                    "matches": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "path"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              ]
+                            },
+                            "executionTimeMs": {
+                              "type": "number"
+                            },
+                            "maxTokens": {
+                              "type": "number"
+                            }
+                          },
+                          "additionalProperties": false
+                        },
+                        "streamExpect": {
+                          "type": "object",
+                          "properties": {
+                            "minChunks": {
+                              "type": "number"
+                            },
+                            "chunkContains": {
+                              "type": "string"
+                            },
+                            "maxChunkIntervalMs": {
+                              "type": "number"
+                            },
+                            "finalContains": {
+                              "type": "string"
+                            },
+                            "maxTotalMs": {
+                              "type": "number"
+                            }
+                          },
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "label",
+                        "input"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "capture": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "string"
+                    }
+                  },
+                  "timeoutMs": {
+                    "type": "integer",
+                    "minimum": 100,
+                    "maximum": 300000
+                  },
+                  "type": {
+                    "type": "string",
+                    "const": "resource-read"
+                  },
+                  "uri": {
+                    "type": "string"
+                  },
+                  "expect": {
+                    "type": "object",
+                    "properties": {
+                      "success": {
+                        "type": "boolean"
+                      },
+                      "schema": {
+                        "type": "object",
+                        "additionalProperties": {}
+                      },
+                      "contains": {
+                        "type": "string"
+                      },
+                      "notContains": {
+                        "type": "string"
+                      },
+                      "equals": {
+                        "type": "string"
+                      },
+                      "matches": {
+                        "type": "string"
+                      },
+                      "jsonPath": {
+                        "anyOf": [
+                          {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "path": {
+                                  "type": "string"
+                                },
+                                "equals": {
+                                  "type": "string"
+                                },
+                                "contains": {
+                                  "type": "string"
+                                },
+                                "matches": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "path"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "path": {
+                                "type": "string"
+                              },
+                              "equals": {
+                                "type": "string"
+                              },
+                              "contains": {
+                                "type": "string"
+                              },
+                              "matches": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "path"
+                            ],
+                            "additionalProperties": false
+                          }
+                        ]
+                      },
+                      "executionTimeMs": {
+                        "type": "number"
+                      },
+                      "maxTokens": {
+                        "type": "number"
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "name",
+                  "type",
+                  "uri"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "tags": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "retry": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 5
+                  },
+                  "retryDelayMs": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "parametrize": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "label": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "input": {
+                          "type": "object",
+                          "additionalProperties": {}
+                        },
+                        "expect": {
+                          "type": "object",
+                          "properties": {
+                            "success": {
+                              "type": "boolean"
+                            },
+                            "schema": {
+                              "type": "object",
+                              "additionalProperties": {}
+                            },
+                            "contains": {
+                              "type": "string"
+                            },
+                            "notContains": {
+                              "type": "string"
+                            },
+                            "equals": {
+                              "type": "string"
+                            },
+                            "matches": {
+                              "type": "string"
+                            },
+                            "jsonPath": {
+                              "anyOf": [
+                                {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "path": {
+                                        "type": "string"
+                                      },
+                                      "equals": {
+                                        "type": "string"
+                                      },
+                                      "contains": {
+                                        "type": "string"
+                                      },
+                                      "matches": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "required": [
+                                      "path"
+                                    ],
+                                    "additionalProperties": false
+                                  }
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "path": {
+                                      "type": "string"
+                                    },
+                                    "equals": {
+                                      "type": "string"
+                                    },
+                                    "contains": {
+                                      "type": "string"
+                                    },
+                                    "matches": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "path"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              ]
+                            },
+                            "executionTimeMs": {
+                              "type": "number"
+                            },
+                            "maxTokens": {
+                              "type": "number"
+                            }
+                          },
+                          "additionalProperties": false
+                        },
+                        "streamExpect": {
+                          "type": "object",
+                          "properties": {
+                            "minChunks": {
+                              "type": "number"
+                            },
+                            "chunkContains": {
+                              "type": "string"
+                            },
+                            "maxChunkIntervalMs": {
+                              "type": "number"
+                            },
+                            "finalContains": {
+                              "type": "string"
+                            },
+                            "maxTotalMs": {
+                              "type": "number"
+                            }
+                          },
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "label",
+                        "input"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "capture": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "string"
+                    }
+                  },
+                  "timeoutMs": {
+                    "type": "integer",
+                    "minimum": 100,
+                    "maximum": 300000
+                  },
+                  "type": {
+                    "type": "string",
+                    "const": "prompt-get"
+                  },
+                  "promptName": {
+                    "type": "string"
+                  },
+                  "tool": {
+                    "type": "string"
+                  },
+                  "promptArgs": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "string"
+                    }
+                  },
+                  "expect": {
+                    "type": "object",
+                    "properties": {
+                      "success": {
+                        "type": "boolean"
+                      },
+                      "schema": {
+                        "type": "object",
+                        "additionalProperties": {}
+                      },
+                      "contains": {
+                        "type": "string"
+                      },
+                      "notContains": {
+                        "type": "string"
+                      },
+                      "equals": {
+                        "type": "string"
+                      },
+                      "matches": {
+                        "type": "string"
+                      },
+                      "jsonPath": {
+                        "anyOf": [
+                          {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "path": {
+                                  "type": "string"
+                                },
+                                "equals": {
+                                  "type": "string"
+                                },
+                                "contains": {
+                                  "type": "string"
+                                },
+                                "matches": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "path"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "path": {
+                                "type": "string"
+                              },
+                              "equals": {
+                                "type": "string"
+                              },
+                              "contains": {
+                                "type": "string"
+                              },
+                              "matches": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "path"
+                            ],
+                            "additionalProperties": false
+                          }
+                        ]
+                      },
+                      "executionTimeMs": {
+                        "type": "number"
+                      },
+                      "maxTokens": {
+                        "type": "number"
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "name",
+                  "type"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "tags": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "retry": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 5
+                  },
+                  "retryDelayMs": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "parametrize": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "label": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "input": {
+                          "type": "object",
+                          "additionalProperties": {}
+                        },
+                        "expect": {
+                          "type": "object",
+                          "properties": {
+                            "success": {
+                              "type": "boolean"
+                            },
+                            "schema": {
+                              "type": "object",
+                              "additionalProperties": {}
+                            },
+                            "contains": {
+                              "type": "string"
+                            },
+                            "notContains": {
+                              "type": "string"
+                            },
+                            "equals": {
+                              "type": "string"
+                            },
+                            "matches": {
+                              "type": "string"
+                            },
+                            "jsonPath": {
+                              "anyOf": [
+                                {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "path": {
+                                        "type": "string"
+                                      },
+                                      "equals": {
+                                        "type": "string"
+                                      },
+                                      "contains": {
+                                        "type": "string"
+                                      },
+                                      "matches": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "required": [
+                                      "path"
+                                    ],
+                                    "additionalProperties": false
+                                  }
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "path": {
+                                      "type": "string"
+                                    },
+                                    "equals": {
+                                      "type": "string"
+                                    },
+                                    "contains": {
+                                      "type": "string"
+                                    },
+                                    "matches": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "path"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              ]
+                            },
+                            "executionTimeMs": {
+                              "type": "number"
+                            },
+                            "maxTokens": {
+                              "type": "number"
+                            }
+                          },
+                          "additionalProperties": false
+                        },
+                        "streamExpect": {
+                          "type": "object",
+                          "properties": {
+                            "minChunks": {
+                              "type": "number"
+                            },
+                            "chunkContains": {
+                              "type": "string"
+                            },
+                            "maxChunkIntervalMs": {
+                              "type": "number"
+                            },
+                            "finalContains": {
+                              "type": "string"
+                            },
+                            "maxTotalMs": {
+                              "type": "number"
+                            }
+                          },
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "label",
+                        "input"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "capture": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "string"
+                    }
+                  },
+                  "timeoutMs": {
+                    "type": "integer",
+                    "minimum": 100,
+                    "maximum": 300000
+                  },
+                  "type": {
+                    "type": "string",
+                    "const": "streaming-tool-call"
+                  },
+                  "tool": {
+                    "type": "string"
+                  },
+                  "input": {
+                    "type": "object",
+                    "additionalProperties": {}
+                  },
+                  "streamExpect": {
+                    "type": "object",
+                    "properties": {
+                      "minChunks": {
+                        "type": "number"
+                      },
+                      "chunkContains": {
+                        "type": "string"
+                      },
+                      "maxChunkIntervalMs": {
+                        "type": "number"
+                      },
+                      "finalContains": {
+                        "type": "string"
+                      },
+                      "maxTotalMs": {
+                        "type": "number"
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "name",
+                  "type",
+                  "tool",
+                  "input",
+                  "streamExpect"
+                ],
+                "additionalProperties": false
+              }
+            ]
+          },
+          "default": []
+        },
+        "concurrency": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50
+        }
+      },
+      "required": [
+        "version",
+        "name",
+        "server"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

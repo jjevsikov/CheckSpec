@@ -1,0 +1,10 @@
+src/
+**/*.test.ts
+**/*.test.js
+**/*.test.d.ts
+**/*.test.js.map
+**/*.test.d.ts.map
+tsconfig.json
+tsconfig.tsbuildinfo
+vitest.config.ts
+.turbo/
