@@ -14,6 +14,7 @@
 <p align="center">
   <a href="https://www.npmjs.com/package/@checkspec/cli"><img alt="npm" src="https://img.shields.io/npm/v/@checkspec/cli.svg"></a>
   <a href="https://github.com/jjevsikov/CheckSpec/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/jjevsikov/CheckSpec/actions/workflows/ci.yml/badge.svg"></a>
+  <img alt="Tests" src="https://img.shields.io/badge/tests-482%20passed-brightgreen">
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg"></a>
 </p>
 
@@ -27,7 +28,7 @@
 
 ---
 
-Think of CheckSpec as **pytest for [MCP](https://modelcontextprotocol.io/) servers**.
+MCP servers talk directly to LLMs — that's a new attack surface your unit tests don't cover. Think of CheckSpec as **pytest for [MCP](https://modelcontextprotocol.io/) servers**.
 
 One command scans your server — discovers every tool, fuzzes them with adversarial inputs, and checks for security vulnerabilities. No config, no test files, just results.
 
@@ -456,7 +457,7 @@ git clone https://github.com/jjevsikov/CheckSpec
 cd CheckSpec
 npm install
 npm run build   # build all packages
-npm test        # 429 tests
+npm test        # 482 tests
 ```
 
 ---
