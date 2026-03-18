@@ -12,6 +12,7 @@
 </p>
 
 <p align="center">
+  <a href="https://www.npmjs.com/package/@checkspec/cli"><img alt="npm" src="https://img.shields.io/npm/v/@checkspec/cli.svg"></a>
   <a href="https://github.com/jjevsikov/CheckSpec/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/jjevsikov/CheckSpec/actions/workflows/ci.yml/badge.svg"></a>
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg"></a>
 </p>
